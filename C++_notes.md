@@ -10,3 +10,13 @@ C++ does not allow arrays to be passed to functions, but, as we have seen, it do
 - void functionName(variableType *arrayName)
 - void functionName(variableType arrayName[length of array])
 - void functionName(variableType arrayName[])
+
+### Functions having void as the argument
+In C:
+- void foo() means "a function foo taking an unspecified number of arguments of unspecified type"
+- void foo(void) means "a function foo taking no arguments"
+
+In C++:
+- void foo() means "a function foo taking no arguments"
+- void foo(void) means "a function foo taking no arguments"
+By writing foo(void), therefore, we achieve the same interpretation across both languages and make our headers multilingual
