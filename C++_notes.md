@@ -4,6 +4,50 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 - inheritance
 - polymorphism
 
+## Basic Interview Questions
+#### Definitions of class and object
+- A class is a user defined data type declared with keyword class that has data and functions. Members whose access is governed by three specifiers: private, protected and public.
+- An object is an instance of a class. It is also a variable of class type.
+
+#### what is polymorphism?
+- Polymorphism means having multiple forms of one thing.
+    - overloading (compile time)
+        - It provides multiple definitions of the same function by changing signature i.e changing number of parameters, change datatype of parameters, return type doesn’t play any role.
+    - overriding (runtime)
+        - In inheritance, polymorphism is done, by method overriding, when both super and sub class have member function with same declaration bu different definition.
+
+
+
+#### what is data encapsulation?
+- Encapsulation is an Object Oriented Programming concept that binds together the data and functions that manipulate the data, and that keeps both safe from outside interference and misuse. Data encapsulation led to the important OOP concept of **data hiding**.
+
+#### what is data abstraction?
+- Data abstraction provides only essential information to the outside world (users) and hiding their background details (implementation details).
+
+#### What makes a class an abstract class?
+- A class is made abstract by declaring at least one of its functions as pure virtual function.
+
+
+#### what is inheritance?
+- Inheritance allows us to define a class in terms of another class, which makes it easier to create and maintain an application. This also provides an opportunity to reuse the code functionality and fast implementation time.
+
+#### What are the 5 types of inheritance in C++?
+- single inheritance
+- multiple inheritance
+    - many to one
+- hierarchical inheritance
+    - one to many
+- multilevel inheritance
+- hybrid (virtual) inheritance
+    - combination of Hierarchical and Mutilevel Inheritance.
+
+#### inline function
+- If a function is inline, the compiler places a copy of the code of that function at each point where the function is called at compile time.
+- Advantage
+    - Less overhead and faster program execution as there is no transfer of control from the main program to the function definition whenever function call is encountered.
+- Disadvantage:
+    - program needs more memory space as function definitions are copied at multiple places in the program wherever the function call is encountered.
+
 ### library function setw():
 - setw() is declared inside #include<iomanip>
 - setw() will set field width.
