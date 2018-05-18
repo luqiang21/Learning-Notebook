@@ -87,7 +87,6 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 
 
 
-
 ##### What is a static variable?
 
 - A static variable will retain its value between function calls.
@@ -96,9 +95,10 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 
 - A static member variable means that the variable is shared between all instances of the class.
 
-    - That means, instead of each instance having a copy of the variable, all instances share this variable. It is often preferred to save space especially when the variable is an object of a class. Likewise for static functions and classes. There is only one copy of the variable. The idea is that creating and cleaning up the instances can be a computationally expensive process, if it can be made static, it is a good idea to speed up execution of the program.
-
-    - On the flip side, it can also be expensive to use a static variable. If using a static variable requires the CPU to fetch the variable from slower memory, rather than having it in the cache or stack. Each fetch from slower memory slows down execution time.
+    - **Advantage**
+        - That means, instead of each instance having a copy of the variable, all instances share this variable. It is often preferred to save space especially when the variable is an object of a class. Likewise for static functions and classes. There is only one copy of the variable. The idea is that creating and cleaning up the instances can be a computationally expensive process, if it can be made static, it is a good idea to speed up execution of the program.
+    - **Disadvantage**
+        - On the flip side, it can also be expensive to use a static variable. If using a static variable requires the CPU to fetch the variable from slower memory, rather than having it in the cache or stack. Each fetch from slower memory slows down execution time.
 
 ## Essential Interview Problems
 1. what will be the output of `cout << 25u - 50;` ?
@@ -168,6 +168,42 @@ Modern object-oriented (OO) languages provide 3 capabilities:
     }
     ```
 
+4. How to determine if one object's class is a subclass of another?
+
+    - There are actually two ways to achieve this:
+    ```cpp
+    // 1. may not be correct
+    Base* p = new Base();
+    Base* pB = static_cast<Base*>(p); // Checks if B is related to A in an inheritance
+         // ^^^^^^^^^^^^^^^^^^^    hierarchy. Fails to compile if not.
+    // 2. dynamic cast
+    #include <iostream>
+    #include <typeinfo>
+
+    using namespace std;
+
+    class Base {
+    public:
+        virtual ~Base() // make this a polymorphic class
+    };
+
+    class Derived: public Base {
+    public:
+        virtual ~Derived() {}
+    };
+
+    int main(){
+        Derived d;
+
+        // Query the type relationship
+        if (dynamic_cast<Base*>(&d)){
+            cout << "Derived is a subclass of Base" << endl;
+        }
+        else{
+            cout << "Derived is NOT a subclass of Base" << endl;
+        }
+    }
+    ```
 
 ### library function setw():
 - setw() is declared inside #include<iomanip>
