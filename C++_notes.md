@@ -59,11 +59,40 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 #### What is a virtual function?
 - Virtual function is a function in the base class with keyword virtual declared, and the goal is to let the user know that this function is meant to be overridden (or redefined) by the derived class.
 
-#### What is a static variable?
+#### Static Keyword
+- Static is a keyword in C++ used to give special characteristics to an element. Static elements are allocated storage only once in a program lifetime in static storage area. And they have a scope till the program lifetime. Static Keyword can be used with following:
+
+    1. Static variable in functions
+        - Static variables when used inside function are initialized only once, and then they hold there value even through function calls. These static variables are stored on static storage area , not in stack.
+        - If you don't initialize a static variable, they are by default initialized to zero.
+    1. Static Class Objects
+        - Objects declared static are allocated storage in static storage area, and have scope till the end of program.
+    1. Static member Variable in class
+        - Static data members of class are those members which are shared by all the objects. Static data member has a single piece of storage, and is not available as separate copy with each object, like other non-static data members.
+        - Static member variables (data members) are not initialied using constructor, because these are not dependent on object initialization.
+        - Also, it must be initialized explicitly, always outside the class. If not initialized, Linker will give error.
+        ```cpp
+        class X
+        {
+         static int i;
+         public:
+         X(){};
+        };
+
+        int X::i=1;
+        ```
+    1. Static Methods in class
+        - These functions work for the class as whole rather than for a particular object of a class.
+        - These functions cannot access ordinary data members and member functions, but only static data members and static member functions. It doesn't have any "this" keyword which is the reason it cannot access ordinary members.
+
+
+
+
+##### What is a static variable?
 
 - A static variable will retain its value between function calls.
 
-#### What is a static member variable?
+##### What is a static member variable?
 
 - A static member variable means that the variable is shared between all instances of the class.
 
