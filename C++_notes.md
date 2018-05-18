@@ -56,6 +56,20 @@ Modern object-oriented (OO) languages provide 3 capabilities:
       1. Derived destructor
       1. Base destructor
 
+#### What is a virtual function?
+- Virtual function is a function in the base class with keyword virtual declared, and the goal is to let the user know that this function is meant to be overridden (or redefined) by the derived class.
+
+#### What is a static variable?
+
+- A static variable will retain its value between function calls.
+
+#### What is a static member variable?
+
+- A static member variable means that the variable is shared between all instances of the class.
+
+    - That means, instead of each instance having a copy of the variable, all instances share this variable. It is often preferred to save space especially when the variable is an object of a class. Likewise for static functions and classes. There is only one copy of the variable. The idea is that creating and cleaning up the instances can be a computationally expensive process, if it can be made static, it is a good idea to speed up execution of the program.
+
+    - On the flip side, it can also be expensive to use a static variable. If using a static variable requires the CPU to fetch the variable from slower memory, rather than having it in the cache or stack. Each fetch from slower memory slows down execution time.
 
 ## Essential Interview Problems
 1. what will be the output of `cout << 25u - 50;` ?
@@ -81,6 +95,49 @@ Modern object-oriented (OO) languages provide 3 capabilities:
     ```
     - Although both options will accomplish precisely the same thing, the second option is better from a performance standpoint. This is because the post-increment operator (i.e., itr++) is more expensive than pre-increment operator (i.e., ++itr). The underlying implementation of the post-increment operator makes a copy of the element before incrementing it and then returns the copy.
     - That said, many compilers will automatically optimize the first option by converting it into the second.
+
+3. Write a C++ function to swap two integers without using a temp variable.
+    ```
+    //Write a C++ function to swap two integers without
+    //using a temp variable.
+
+    //Hint: think about pointers
+
+    #include<iostream>
+    using namespace std;
+
+    void swap(int *xp, int *yp)
+    {
+         if(xp == yp)
+             return;
+         *xp = *xp + *yp;
+         cout<<"\n1. During swap x = "<<*xp<<" y = "<<*yp;
+         *yp = *xp - *yp;
+         cout<<"\n2. During swap x = "<<*xp<<" y = "<<*yp;
+         *xp = *xp - *yp;
+         cout<<"\n3. During swap x = "<<*xp<<" y = "<<*yp;
+    }
+    void swap(int &x, int &y)
+    {
+         if(x == y)
+             return;
+         x = x + y;
+         cout<<"\n1. During swap x = "<<x<<" y = "<<y;
+         y = x - y;
+         cout<<"\n2. During swap x = "<<x<<" y = "<<y;
+         x = x - y;
+         cout<<"\n3. During swap x = "<<x<<" y = "<<y;
+    }
+    int main()
+    {
+         int x = 10;
+         int y = 33;
+         cout<<"\nBefore swap x = "<<x<<" y = "<<y;
+         swap(&x,&y);
+         cout<<"\nAfter swap x = "<<x<<" y = "<<y;
+         return 0;
+    }
+    ```
 
 
 ### library function setw():
