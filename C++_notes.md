@@ -5,6 +5,7 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 - polymorphism
 
 ## Basic Interview Questions
+
 #### Definitions of class and object
 - A class is a user defined data type declared with keyword class that has data and functions. Members whose access is governed by three specifiers: private, protected and public.
 - An object is an instance of a class. It is also a variable of class type.
@@ -47,6 +48,40 @@ Modern object-oriented (OO) languages provide 3 capabilities:
     - Less overhead and faster program execution as there is no transfer of control from the main program to the function definition whenever function call is encountered.
 - Disadvantage:
     - program needs more memory space as function definitions are copied at multiple places in the program wherever the function call is encountered.
+
+#### What is the order in which the destructors and the constructors are called in C++?
+- The order is:
+      1. Base constructor
+      1. Derived constructor
+      1. Derived destructor
+      1. Base destructor
+
+
+## Essential Interview Problems
+1. what will be the output of `cout << 25u - 50;` ?
+    - In C++, if the types of two operands differ from one another, then the operand with the “lower type” will be promoted to the type of the “higher type” operand, using the following type hierarchy (listed here from highest type to lowest type): long double, double, float, unsigned long int, long int, unsigned int, int (lowest).
+
+2. Consider the two code snippets below for printing a vector. Is there any advantage of one vs. the other? Explain.
+
+    Option 1:
+    ```cpp
+    vector vec;
+    /* ... .. ... */
+    for (auto itr = vec.begin(); itr != vec.end(); itr++) {
+    	itr->print();
+    }
+    ```
+    Option 2:
+    ```cpp
+    vector vec;
+    /* ... .. ... */
+    for (auto itr = vec.begin(); itr != vec.end(); ++itr) {
+    	itr->print();
+    }
+    ```
+    - Although both options will accomplish precisely the same thing, the second option is better from a performance standpoint. This is because the post-increment operator (i.e., itr++) is more expensive than pre-increment operator (i.e., ++itr). The underlying implementation of the post-increment operator makes a copy of the element before incrementing it and then returns the copy.
+    - That said, many compilers will automatically optimize the first option by converting it into the second.
+
 
 ### library function setw():
 - setw() is declared inside #include<iomanip>
