@@ -100,6 +100,36 @@ Modern object-oriented (OO) languages provide 3 capabilities:
     - **Disadvantage**
         - On the flip side, it can also be expensive to use a static variable. If using a static variable requires the CPU to fetch the variable from slower memory, rather than having it in the cache or stack. Each fetch from slower memory slows down execution time.
 
+#### Why are #ifndef and #define used in C++ header files?
+- Those are called #include guards.
+
+  Once the header is included, it checks if a unique value (in this case HEADERFILE_H_) is defined. Then if it's not defined, it defines it and continues to the rest of the page.
+
+  When the code is included again, the first ifndef fails, resulting in a blank file.
+
+  That prevents double declaration of any identifiers such as types, enums and static variables.
+
+#### Why do we use setters and getters?
+- Mutators (setters) are used to set values of private data members. One of the main goals of a mutator is to check correctness of the value to be set to data member.
+
+#### compile and run
+- include libraries
+- preprocessor, compilation (.o), link (.exe or no suffix)
+
+- static libaries - actually compiled into your program
+    - windows: XYZ.lib
+    - UNIX/Linux/Mac: libXYZ.a
+- Dynamic libraries: program find code at run time
+    - windows: XYZ.dll
+    - UNIX/Linux/Mac: libXYZ.so
+    - Mac: XYZ.dylib
+
+### const
+-
+
+
+
+
 ## Essential Interview Problems
 1. what will be the output of `cout << 25u - 50;` ?
     - In C++, if the types of two operands differ from one another, then the operand with the “lower type” will be promoted to the type of the “higher type” operand, using the following type hierarchy (listed here from highest type to lowest type): long double, double, float, unsigned long int, long int, unsigned int, int (lowest).
