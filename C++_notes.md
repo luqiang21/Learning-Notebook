@@ -125,7 +125,40 @@ Modern object-oriented (OO) languages provide 3 capabilities:
     - Mac: XYZ.dylib
 
 ### const
--
+- to be filled
+
+
+#### Difference between constexpr(C++11) variables and const
+- The primary difference between const and constexpr variables is that the initialization of a const variable can be deferred until run time whereas a constexpr variable must be initialized at compile time. All constexpr variables are const.
+
+    ```cpp
+    constexpr float x = 42.0;  
+    constexpr float y{108};  
+    constexpr float z = exp(5, 3);  
+    constexpr int i; // Error! Not initialized  
+    int j = 0;  
+    constexpr int k = j + 1; //Error! j not a constant expression  
+    ```
+
+#### what happens to an uninitilized array?
+- If you have the declaration
+`int factors[100]; /* note this is not initialized */`
+- there are two situations:
+    - When declared as a global (file scope) variable, the entire array will be initialised to zeros before your program starts.
+    - When declared as a local (function scope) variable, the array is not initialised and will contain unpredictable numbers.
+
+#### Difference between deque and list
+- Deque manages its elements with a dynamic array, provides random access, and has almost the same interface as a vector.
+- List manages its elements as a doubly linked list and does not provide random access.
+- Deque provides Fast insertions and deletions at both the end and the beginning. Inserting and deleting elements in the middle is relatively slow because all elements up to either of both ends may be moved to make room or to fill a gap.
+- In List, inserting and removing elements is fast at each position, including both ends.
+- Deque: Any insertion or deletion of elements other than at the beginning or end invalidates all pointers, references, and iterators that refer to elements of the deque.
+- List: Inserting and deleting elements does not invalidate pointers, references, and iterators to other elements.
+
+Name |Insert/erase at the beginning  |     in middle    |    at the end
+-------- | ------ | ------- | -------
+Deque:     |  Amortized constant    |              Linear      |     Amortized constant
+List:      |  Constant                |            Constant       |  Constant
 
 
 
@@ -240,12 +273,19 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 - setw() will set field width.
 - setw() sets the number of characters to be used as the field width for the **next** insertion operation.
 
+## STL
 ### Vector
 - std::vector::begin
     - Returns an iterator pointing to the first element in the vector.
 - std::vector::end
     - An iterator to the element past the end of the sequence.
+- As is the case with Python, elements are zero-indexed and can be accessed with a syntax such as vector_name[2]. However, unlike Python, C++ does not check the validity of an index at run-time; it simply trusts the programmer (with potential disaster if the programmer is wrong). A safer (yet slower) way to access an element in C++ is with the syntax vector_name.at(2); this version performs an explicit run-time check of the given index, throwing an out of range exception when warranted.
 
+### set
+- Python’s sets are implemented using an approach known as hashing. This approach provides constant-time operations in general, but the elements of the set are not well-ordered. In contrast, the C++ set class represents an ordered set, implemented using a balanced binary search tree. For this reason, the element-type for a set must define a total ordering, by default based on an implementation of operator<.
+
+### map
+- As is the case with sets, C++ uses balanced binary trees to implement maps, and the key type must define a total ordering, typically with operator<.
 
 ### Arrays as parameters
 C++ does not allow arrays to be passed to functions, but, as we have seen, it does allow pointers to be passed. There are three methods for passing an array by reference to a function:
