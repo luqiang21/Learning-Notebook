@@ -21,6 +21,10 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 
 #### what is data encapsulation?
 - Encapsulation is an Object Oriented Programming concept that binds together the data and functions that manipulate the data, and that keeps both safe from outside interference and misuse. Data encapsulation led to the important OOP concept of **data hiding**.
+- Benefits of encapsulation:
+    - Control the way data is accessed or modified
+    - Code is more flexible and easy to change with new requirements
+    - Change one part of code without affecting other part of code.
 
 #### what is data abstraction?
 - Data abstraction provides only essential information to the outside world (users) and hiding their background details (implementation details).
@@ -350,3 +354,6 @@ T getBigger(T input1, U input2)
     return input2;
 }
 ```
+
+
+### write a matrix class
