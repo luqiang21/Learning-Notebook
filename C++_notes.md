@@ -44,7 +44,7 @@ Modern object-oriented (OO) languages provide 3 capabilities:
     - one to many
 - multilevel inheritance
 - hybrid (virtual) inheritance
-    - combination of Hierarchical and Mutilevel Inheritance.
+    - combination of Hierarchical and Muti-level Inheritance.
 
 #### inline function
 - If a function is inline, the compiler places a copy of the code of that function at each point where the function is called at compile time.
@@ -144,7 +144,7 @@ Modern object-oriented (OO) languages provide 3 capabilities:
     constexpr int k = j + 1; //Error! j not a constant expression  
     ```
 
-#### what happens to an uninitilized array?
+#### what happens to an uninitialized array?
 - If you have the declaration
 `int factors[100]; /* note this is not initialized */`
 - there are two situations:
@@ -271,6 +271,33 @@ List:      |  Constant                |            Constant       |  Constant
         }
     }
     ```
+
+5. What is the problem with the following code?
+    ```
+    class A
+    {
+    public:
+    A() {}
+    ~A(){}
+    };
+
+    class B: public A
+    {
+    public:
+    B():A(){}
+    ~B(){}
+    };
+
+    int main(void)
+    {
+      A* a = new B();
+      delete a;
+    }
+    ```
+    The behavior is undefined because A’s destructor is not virtual. From the spec:
+
+    > ( C++11 §5.3.5/3 ) if the static type of the object to be deleted is different from its dynamic type, the static type shall be a base class of the dynamic type of the object to be deleted and the static type shall have a virtual destructor or the behavior is undefined.
+
 
 ### library function setw():
 - setw() is declared inside #include<iomanip>
