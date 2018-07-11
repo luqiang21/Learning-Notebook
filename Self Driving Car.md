@@ -79,5 +79,49 @@
     RNNs trained from lane sequences and obstacle status.
 
 # Planning
+- Overall planning structure
+
+    ```
+    (map, start, goal)    -->   Route Navigation    -->   High level route planning (A*)
+                                      |
+                                      V
+                                Trajectory planning -->   A sequence of collision free points
+    ```
+
+- Trajectory generation needs to consider:
+    - Collision free
+    - Passenger comfort
+    - Trajectory physically viable for the car
+    - Obey laws
+- **Use cost function to choose the best trajectory**
+    - Deviation from the center of lane
+    - Collisions
+    - Speed limit
+    - Passenger comfort
+- Path-Velocity decoupled planning
+    - Path planning + speed planning
+        - Path planning: segment the road into cells, randomly sample points from each
+        of these cells. Connect these points to create candidate paths, evaluate paths
+         using cost functions.
+        - speed planning: ST-graph, S: longitudinal distance. Use quadratic programming
+        to smooth the path and speed profile.
+- Lattice Planning
+    - Lateral offset relative to the longitudinal trajectory: S-L graph
+    - S-T graph
+    - Generate ST and SL trajectories independently and then combining them
+    - ending states:
+        - cruising
+        - following
+        - stopping
+    - Once we have ST and SL trajectories, we can transform them back to the Cartesian
+     coordinate frame. Then we can combine them to construct a 3D trajectory composed
+     of 2D way points and 1D time stamps.
 
 # Control
+Use variable control inputs to minimize deviation from target trajectory and maximize
+passenger comfort.
+- PID
+
+- LQR
+
+- MPC
