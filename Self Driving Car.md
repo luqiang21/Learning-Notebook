@@ -123,5 +123,24 @@ passenger comfort.
 - PID
 
 - LQR
+    - Linear quadratic regulator
+    - Model-based controller uses the state of the vehicle to minimize error.
+    - Used for lateral control which has four inputs:
+        - lateral error
+        - rate of change of lateral error
+        - heading error
+        - rate of change of heading error
+    - $$ x = $$
 
 - MPC
+    - Build a model of the vehicle.
+    - Use an optimization engine to calculate control inputs over a finite time horizon.
+    - Implement the first set of control inputs.
+    - Need to decide on how far into the future we want MPC to look.
+        - Need to tradeoff accuracy with how quickly we need to get a result.
+    - `(Vehicle state + Control inputs)  -->  Vehicle model  --> Vehicle Trajectory    `
+    - Advantage:
+        - Takes vehicle model, more accurate than PID
+        - Work with different cost functions
+    - Disadvantage:
+        - Complex, slower, harder to implement
