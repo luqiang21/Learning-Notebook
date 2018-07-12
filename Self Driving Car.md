@@ -130,7 +130,7 @@ passenger comfort.
         - rate of change of lateral error
         - heading error
         - rate of change of heading error
-    - $$ x = $$
+    - $ x = $
 
 - MPC
     - Build a model of the vehicle.
