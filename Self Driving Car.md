@@ -121,7 +121,14 @@
 Use variable control inputs to minimize deviation from target trajectory and maximize
 passenger comfort.
 - PID
-
+    - equation:
+        - ![img](http://www.sciweavers.org/tex2img.php?eq=a%20%3D%20-K_pe%20-%20K_i%20%20%5Cint%20e%20dt%20-%20K_d%20%20%5Cfrac%7Bde%7D%7Bdt%7D%20&bc=White&fc=Black&im=jpg&fs=12&ff=mathptmx&edit=0)
+    - Disadvantages
+        - Just a linear algorithm, insufficient for complex problems.
+        - For self driving car, we need different PID controllers for steering and
+        acceleration, it is hard to combine a latitudinal and a longitudinal control.
+        - PID depends on real-time error measurement, it may fail when it subjects to
+         measurement delays.
 - LQR
     - Linear quadratic regulator
     - Model-based controller uses the state of the vehicle to minimize error.
@@ -130,7 +137,21 @@ passenger comfort.
         - rate of change of lateral error
         - heading error
         - rate of change of heading error
-    - $ x = $
+    - state
+          - ![img](http://www.sciweavers.org/tex2img.php?eq=x%3D%20%5Cbegin%7Bbmatrix%7D%20%0Acte%5C%5C%0A%5Cdot%7Bcte%7D%5C%5C%0A%5Ctheta%5C%5C%0A%5Cdot%7B%5Ctheta%7D%0A%5Cend%7Bbmatrix%7D%20&bc=White&fc=Black&im=jpg&fs=12&ff=mathptmx&edit=0)
+    - control input
+        - ![img](http://www.sciweavers.org/tex2img.php?eq=u%20%3D%20%5Cbegin%7Bbmatrix%7D%20%0Asteering%5C%5C%0Athrottle%5C%5C%0Abrake%5Cend%7Bbmatrix%7D%20&bc=White&fc=Black&im=jpg&fs=12&ff=mathptmx&edit=0)
+    - Model
+        - ![img](http://www.sciweavers.org/tex2img.php?eq=%5Cdot%7Bx%7D%20%3D%20Ax%20%2B%20Bu%2C%20%5Cquad%20%5CDelta%20%5Cdot%7Bx%7D%20%3D%20A%5CDelta%7Bx%7D%20%2B%20B%5CDelta%7Bu%7D&bc=White&fc=Black&im=jpg&fs=12&ff=mathptmx&edit=0)
+    - Cost
+        - ![img](http://www.sciweavers.org/tex2img.php?eq=cost%20%3D%20%20%5Cint_0%5E%5Cinfty%20%28x%5ETQx%20%2B%20u%5ETRu%29%20dt&bc=White&fc=Black&im=jpg&fs=12&ff=mathptmx&edit=0)
+        - will be something like:
+            - ![img](http://www.sciweavers.org/tex2img.php?eq=w_1%20cte%5E2%20%2B%20w_2%20%5Cdot%7Bcte%7D%5E2%20%2B%20w_3%20%5Ctheta%5E2%20%2B%20w_4%20%5Cdot%7B%5Ctheta%7D%5E2&bc=White&fc=Black&im=jpg&fs=12&ff=mathptmx&edit=0)
+    - Objective
+          - ![img](http://www.sciweavers.org/tex2img.php?eq=u%20%3D%20-Kx&bc=White&fc=Black&im=jpg&fs=12&ff=mathptmx&edit=0)
+          - find optimal K
+
+
 
 - MPC
     - Build a model of the vehicle.
