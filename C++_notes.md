@@ -165,6 +165,12 @@ Deque:     |  Amortized constant    |              Linear      |     Amortized c
 List:      |  Constant                |            Constant       |  Constant
 
 
+#### Difference between `delete` and `delete []`
+- `delete` calls one destructor whereas `delete[]` needs to look up the size of
+the array and call that many destructors.
+- primitive types like int don't have destructors, so if you are wrongly calling
+`delete` on a pointer to `new []` arrays, you will not get errors. 
+
 
 
 ## Essential Interview Problems
