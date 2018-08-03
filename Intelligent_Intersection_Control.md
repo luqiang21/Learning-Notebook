@@ -37,3 +37,7 @@ vehicle with the maximum speed will not be able to stop.
 - No consideration of communication uncertainty.
 - No explanation on optimizing weights ![img](images/omega_1.png) <!--w1--> and ![img](images/omega_2.png) <!--w2-->.
 - Used number of stopped cars and travel time as the performance.
+
+## Mixed Integer Linear Programming for Optimal Scheduling of Autonomous Vehicle Intersection Crossing
+### S. Alireza Fayazi, Ardalan Vahidi
+#### Method
