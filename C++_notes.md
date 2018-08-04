@@ -169,8 +169,62 @@ List:      |  Constant                |            Constant       |  Constant
 - `delete` calls one destructor whereas `delete[]` needs to look up the size of
 the array and call that many destructors.
 - primitive types like int don't have destructors, so if you are wrongly calling
-`delete` on a pointer to `new []` arrays, you will not get errors. 
+`delete` on a pointer to `new []` arrays, you will not get errors.
 
+#### Function pointer
+- function pointer example:
+        ```
+        #include <iostream>
+        using namespace std;
+
+        void test() {
+            cout << "test" << endl;
+        }
+        void test(int value) {
+            cout << "test with value: " << value << endl;
+        }
+
+        int main() {
+            test();
+            void (*pTest)() = test;
+            pTest();
+
+            test(3);
+            void (*pTest1)(int) = test;
+            pTest1(3);
+        }
+        ```
+- Callback example
+        ```
+        #include <iostream>
+        #include <vector>
+        using namespace std;
+
+        bool match(string test) {
+            return test.size() == 3;
+        }
+
+        int countStrings(vector<string> &texts, bool (*match)(string test)) {
+            int tally;
+
+            for(auto test: texts) {
+                if(match(test)) {
+                    tally ++;
+                }
+            }
+            return tally;
+        }
+
+        int main() {
+            vector<string> texts = {"one", "two", "three", "four"};
+            cout << countStrings(texts, match) << endl;
+            return 0;
+        }
+
+        ```
+
+#### What is callback function and when to use it?
+-
 
 
 ## Essential Interview Problems
