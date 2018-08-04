@@ -194,6 +194,7 @@ the array and call that many destructors.
             pTest1(3);
         }
         ```
+- A callback is any executable code that is passed as an argument to other code, which is expected to call back (execute) the argument at a given time. In simple language, If a reference of a function is passed to another function as an argument to call it, then it will be called as a Callback function.
 - Callback example
         ```
         #include <iostream>
@@ -222,9 +223,8 @@ the array and call that many destructors.
         }
 
         ```
+#### Heap and stack in memory
 
-#### What is callback function and when to use it?
--
 
 
 ## Essential Interview Problems
