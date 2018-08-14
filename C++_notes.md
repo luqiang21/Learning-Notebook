@@ -224,7 +224,7 @@ the array and call that many destructors.
 
         ```
 #### Heap and stack in memory
-
+- 
 
 
 ## Essential Interview Problems
