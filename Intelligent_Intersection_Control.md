@@ -41,3 +41,6 @@ vehicle with the maximum speed will not be able to stop.
 ## Mixed Integer Linear Programming for Optimal Scheduling of Autonomous Vehicle Intersection Crossing
 ### S. Alireza Fayazi, Ardalan Vahidi
 #### Method
+
+# Simulation notes
+- SUMO + ns3 cannot simulate the influence on communication from buildings.
