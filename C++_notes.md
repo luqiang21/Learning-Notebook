@@ -104,6 +104,25 @@ Modern object-oriented (OO) languages provide 3 capabilities:
     - **Disadvantage**
         - On the flip side, it can also be expensive to use a static variable. If using a static variable requires the CPU to fetch the variable from slower memory, rather than having it in the cache or stack. Each fetch from slower memory slows down execution time.
 
+#### #ifdef and #ifndef
+- Text inside an ifdef/endif or ifndef/endif pair will be left in or removed by the pre-processor depending on the condition. ifdef means "if the following is defined" while ifndef means "if the following is not defined".
+
+    So:  
+    ```
+    #define one 0
+    #ifdef one
+        printf("one is defined ");
+    #endif
+    #ifndef one
+        printf("one is not defined ");
+    #endif
+    ```
+    is equivalent to:
+
+    `printf("one is defined ");   `  
+    
+    since one is defined so the ifdef is true and the ifndef is false. It doesn't matter what it's defined as.  
+
 #### Why are #ifndef and #define used in C++ header files?
 - Those are called #include guards.
 
