@@ -294,6 +294,28 @@ the array and call that many destructors.
                                      socklen_t addrlen);`
         - The connect() system call connects the socket referred to by the file descriptor sockfd to the address specified by addr. Server’s address and port is specified in addr.
 
+- Other notes about socket:
+    > When the connect completes, the socket s can be used to send in a request for
+    the text of the page. The same socket will read the reply, and then be destroyed.
+    That’s right, destroyed. Client sockets are normally only used for one exchange
+    (or a small set of sequential exchanges).
+
+    > `send` and `recv` operate on the network buffers. They do not necessarily handle all
+    the bytes you hand them (or expect from them), because their major focus is handling
+    the network buffers. In general, they return when the associated network buffers
+    have been filled (send) or emptied (recv). They then tell you how many bytes they
+    handled. It is your responsibility to call them again until your message has been
+    completely dealt with.
+
+    > A protocol like HTTP uses a socket for only one transfer. The client sends a
+    request, then reads a reply. That’s it. The socket is discarded. This means that
+    a client can detect the end of the reply by receiving 0 bytes.
+
+    > But if you plan to reuse your socket for further transfers, you need to realize
+    that there is no EOT on a socket. I repeat: if a socket send or recv returns after
+    handling 0 bytes, the connection has been broken.
+
+
 ## Essential Interview Problems
 1. what will be the output of `cout << 25u - 50;` ?
     - In C++, if the types of two operands differ from one another, then the operand with the “lower type” will be promoted to the type of the “higher type” operand, using the following type hierarchy (listed here from highest type to lowest type): long double, double, float, unsigned long int, long int, unsigned int, int (lowest).
