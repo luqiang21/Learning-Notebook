@@ -6,6 +6,8 @@
 - Sockets are inherently bidirectional in nature, and socket object methods map
 directly to socket calls in the C library. We usually call the perpetually running
 listener program a server and the connecting program a client.
+- `socket(socket_family, socket_type)`
+    - the constructor creates a new socket. For TCP, we use `socket(AF_INET, SOCK_STREAM)`.
 - `sockobj.listen(5)`
     - Starts listening for incoming client connections and allows for a backlog of
     up to 5 pending requests.
@@ -32,6 +34,8 @@ and some clients will eventually be denied connections.
         - simpler and portable
         - unlike forking process, don't need to do cleaning, child threads die silently on exit
     - Multiplexing servers
+
+
 
 
 ## Threads

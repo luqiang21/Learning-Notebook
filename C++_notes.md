@@ -4,7 +4,7 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 - inheritance
 - polymorphism
 
-## Basic Interview Questions
+# Basic Interview Questions
 
 #### Definitions of class and object
 - A class is a user defined data type declared with keyword class that has data and functions. Members whose access is governed by three specifiers: private, protected and public.
@@ -315,8 +315,49 @@ the array and call that many destructors.
     that there is no EOT on a socket. I repeat: if a socket send or recv returns after
     handling 0 bytes, the connection has been broken.
 
+#### typedef versus #define
+- `typedef` is used to give data type a new name.
+- `#define` is a C directive which is used to #define alias.
+- `typedef` is different from `#define` among the following aspects:
+    - from [geeksforgeeks](https://www.geeksforgeeks.org/typedef-versus-define-c/)  
 
-## Essential Interview Problems
+    > - typedef is limited to giving symbolic names to types only, where as #define can be used to define alias for values as well, e.g., you can define 1 as ONE, 3.14 as PI, etc.
+    > - typedef interpretation is performed by the compiler where #define statements are performed by preprocessor.
+    > - #define should not be terminated with semicolon, but typedef should be terminated with semicolon.
+    > - #define will just copy-paste the definition values at the point of use, while typedef is actual definition of a new type.
+    > - typedef follows the scope rule which means if a new type is defined in a scope (inside a function), then the new type name will only be visible till the scope is there. In case of #define, when preprocessor encounters #define, it replaces all the occurrences, after that (No scope rule is followed).
+
+- example:
+
+    ```
+    #include <stdio.h>
+    typedef char* ptr;
+    #define PTR char*
+    int main() {
+        ptr a, b, c;
+        PTR x, y, z;
+        std::cout << "sizeof a: " << sizeof(a) << std::endl;
+        std::cout << "sizeof b: " << sizeof(b) << std::endl;
+        std::cout << "sizeof c: " << sizeof(c) << std::endl;
+        std::cout << "sizeof x: " << sizeof(x) << std::endl;
+        std::cout << "sizeof y: " << sizeof(y) << std::endl;
+        std::cout << "sizeof z: " << sizeof(z) << std::endl;
+    }
+    ```
+- output: (note the size difference between x and y, z) 
+
+    ```
+    sizeof a: 8
+    sizeof b: 8
+    sizeof c: 8
+    sizeof x: 8
+    sizeof y: 1
+    sizeof z: 1
+    ```
+
+
+
+# Essential Interview Problems
 1. what will be the output of `cout << 25u - 50;` ?
     - In C++, if the types of two operands differ from one another, then the operand with the “lower type” will be promoted to the type of the “higher type” operand, using the following type hierarchy (listed here from highest type to lowest type): long double, double, float, unsigned long int, long int, unsigned int, int (lowest).
 
