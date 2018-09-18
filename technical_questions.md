@@ -39,6 +39,9 @@ V + V * Eaj + V
 2V + E(total number of edges in graph)
 V + E
 
+## AVL tree vs. Red-Black tree
+- In practice, AVL Trees are typically faster with find operations (because they are forced to be more balanced, so traversing down the tree without modifying it is faster) and Red-Black Trees are typically faster with insertion and removal operations (because they are not required to be as balanced, so they perform less operations to maintain balance after modification).
+
 ## Full binary tree vs. complete binary tree
 - A full binary tree (sometimes proper binary tree or 2-tree) is a tree in which every node other than the leaves has two children.
 - A complete binary tree is a binary tree in which every level, except possibly the last, is completely filled, and all nodes are as far left as possible.

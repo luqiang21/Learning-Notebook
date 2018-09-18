@@ -344,7 +344,7 @@ the array and call that many destructors.
         std::cout << "sizeof z: " << sizeof(z) << std::endl;
     }
     ```
-- output: (note the size difference between x and y, z) 
+- output: (note the size difference between x and y, z)
 
     ```
     sizeof a: 8
@@ -506,7 +506,7 @@ the array and call that many destructors.
 - Python’s sets are implemented using an approach known as hashing. This approach provides constant-time operations in general, but the elements of the set are not well-ordered. In contrast, the C++ set class represents an ordered set, implemented using a balanced binary search tree. For this reason, the element-type for a set must define a total ordering, by default based on an implementation of operator<.
 
 ### map
-- As is the case with sets, C++ uses balanced binary trees to implement maps, and the key type must define a total ordering, typically with operator<.
+- As is the case with sets, C++ uses balanced binary trees (red-black tree) to implement maps, and the key type must define a total ordering, typically with operator<.
 
 ### Arrays as parameters
 C++ does not allow arrays to be passed to functions, but, as we have seen, it does allow pointers to be passed. There are three methods for passing an array by reference to a function:
