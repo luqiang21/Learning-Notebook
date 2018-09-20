@@ -1,3 +1,13 @@
+# Docker
+* docker ps
+    * show running containers, use `-a` to show all.
+* docker images
+    * show all images
+* docker run --name new_container_name -p host_port:container_port existing_image_name
+    * run a new container with existing image
+* docker stop container_name
+    * stop the container
+
 # Evernote:
 * ctrl + command + k
     * 删除线
