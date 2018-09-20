@@ -8,6 +8,20 @@
 * docker stop container_name
     * stop the container
 
+# Bash
+## cat
+- display multiple files' contents: `cat file1_path file2_path `
+- create a file called test and type desired test
+   - `cat >test`
+   - `some test contents`
+   - CTRL + d
+- display line numbers in file: `cat -n test`
+- display `$` at the end of line and also in space if there is any gap between paragraphs: `cat -e test`
+- overwrite `test1` by the content of `test`: `cat test > test1`
+- append the content of `test` to the end of `test1`: `cat test >> test1`
+- redirecting multiple files contain in a single file: `cat test test1 > test2`
+- sorting contents of multiple files in a single file: `cat test test1 | sort > test2`
+
 # Evernote:
 * ctrl + command + k
     * 删除线
