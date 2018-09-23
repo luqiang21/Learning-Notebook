@@ -1,18 +1,18 @@
 # Optimization
 ## Newton method
 - is a method for finding successively better approximations to the roots (or zeroes) of a real-valued function.
-    > The method starts with a function f defined over the real numbers x, the function's derivative f′, and an initial guess x0 for a root of the function f. If the function satisfies the assumptions made in the derivation of the formula and the initial guess is close, then a better approximation x1 is  
-    ![img](images/newton1.jpg)  
-    > Geometrically, (x1, 0) is the intersection of the x-axis and the tangent of the graph of f at (x0, f (x0)).  
+    > The method starts with a function $f$ defined over the real numbers $x$, the function's derivative $f′$, and an initial guess $x_0$ for a root of the function $f$. If the function satisfies the assumptions made in the derivation of the formula and the initial guess is close, then a better approximation $x_1$ is  
+    $$x_1 = x_0 - \frac{f(x_0)}{f'(x_0)}$$
+    > Geometrically, $(x_1, 0)$ is the intersection of the x-axis and the tangent of the graph of $f$ at $(x_0, f(x_0))$.  
     > The process is repeated as  
-    ![img](images/newton2.jpg)    
+    $$x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}$$
     > until a sufficiently accurate value is reached.
 
 - Why don't we use Newton method in deep learning?  
 
     > Gradient descent maximizes a function using knowledge of its derivative. Newton's method, a root finding algorithm, maximizes a function using knowledge of its second derivative. That can be faster when the second derivative is known and easy to compute (the Newton-Raphson algorithm is used in logistic regression). However, the analytic expression for the second derivative is often complicated or intractable, requiring a lot of computation. Numerical methods for computing the second derivative also require a lot of computation -- if N values are required to compute the first derivative, N^2 are required for the second derivative.
 
-    - [] why are we saying newton method use second derivative to maximize? (the equation is only 1st derivative)
+    - [ ] why are we saying newton method use second derivative to maximize? (the equation is only 1st derivative)
 # Supervised Learning
 
 # Unsupervised Learning
