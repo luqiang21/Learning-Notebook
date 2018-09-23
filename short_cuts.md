@@ -16,6 +16,11 @@
 * to indent a block of lines
     * V enter visual mode, press j select lines you want to indent, press >
 * y to copy
+* 0	moves the cursor to the beginning of the line.
+* $	moves the cursor to the end of the line.
+* gg move to the beginning of the file.
+* G	move to the end of the file
+
 
 # git
 * git clone depth=1 your_git_repo
