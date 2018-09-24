@@ -45,3 +45,34 @@ V + E
 ## Full binary tree vs. complete binary tree
 - A full binary tree (sometimes proper binary tree or 2-tree) is a tree in which every node other than the leaves has two children.
 - A complete binary tree is a binary tree in which every level, except possibly the last, is completely filled, and all nodes are as far left as possible.
+
+
+# Others
+## Protocol Buffers
+- > Protocol buffers are a flexible, efficient, automated mechanism for serializing structured data – think XML, but smaller, faster, and simpler. You define how you want your data to be structured once, then you can use special generated source code to easily write and read your structured data to and from a variety of data streams and using a variety of languages. You can even update your data structure without breaking deployed programs that are compiled against the "old" format.
+- Example
+	```
+	message Person {
+	required string name = 1;
+	required int32 id = 2;
+	optional string email = 3;
+
+	enum PhoneType {
+	MOBILE = 0;
+	HOME = 1;
+	WORK = 2;
+	}
+
+	message PhoneNumber {
+	required string number = 1;
+	optional PhoneType type = 2 [default = HOME];
+	}
+
+	repeated PhoneNumber phone = 4;
+	}
+  ```
+- Remember the " = 1", " = 2" markers on each element identify the unique "tag" that field uses in the binary encoding. Tag numbers 1-15 require one less byte to encode than higher numbers, so as an optimization you can decide to use those tags for the commonly used or repeated elements, leaving tags 16 and higher for less-commonly used optional elements. Each element in a repeated field requires re-encoding the tag number, so repeated fields are particularly good candidates for this optimization.
+- 'required': a value for the field must be provided, otherwise the message will be considered "uninitialized"
+- 'optional': the field may or may not be set.
+- 'repeated': the field may be repeated any number of times (including zero). This
+is the most popular choice.
