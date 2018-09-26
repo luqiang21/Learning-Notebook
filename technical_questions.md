@@ -76,3 +76,8 @@ V + E
 - 'optional': the field may or may not be set.
 - 'repeated': the field may be repeated any number of times (including zero). This
 is the most popular choice.
+
+## Core dump
+- A core dump is a file containing a process's address space(memory) when the process terminates unexpectedly. Core dumps may be produced on-demand (such as by a debuger), or automatically upon termination. Core dumps are triggered by the kernel in reponse to program crashes, and maybe passed to a helper program for further processing.
+- One can this of it as a full-length "snapshot" of RAM.
+- Use `gdb -c coredump_file` to check it.
