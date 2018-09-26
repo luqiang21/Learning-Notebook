@@ -22,6 +22,28 @@
 - redirecting multiple files contain in a single file: `cat test test1 > test2`
 - sorting contents of multiple files in a single file: `cat test test1 | sort > test2`
 
+## find
+- `find / -name myfile.txt`
+   - first part: find
+   - second part: where to start search from, `/` means the whole drive
+   - third part: an expression which determines what to find
+   - fourth part: the name of the thing to find
+- Find all files within current folder that accessed more than 100 days ago: `find . -atime 100`
+- Find all empty files and folders in your system: `find / -empty`
+- Find all executable files: `find / -exec`
+- Find all readable files: `find / -read`
+- Find all files with extension .mps: `find / -name *.mp3`
+- To avoid matching files 'bat' in the middle like embattled.c, you could use:
+   - `find /path/to/folder -name '*bat.c' -o -name 'bat*.c'`
+   - `-o` is the or operator.
+- If you want to search case-insensitively, so files containing BAT, bAt, and so forth are matched, use the `-iname` test instead of the `-name` test:
+   - `find /path/to/folder -iname '*bat*'`
+- If you want to find both regular files and symbolic links, you can use:
+   - `find /path/to/folder -name '*bat*' \( -type f -o -type l \)`
+- Display found file/folder details
+   - `find /path/to/folder -name '*bat*' -ls`
+
+
 # Evernote:
 * ctrl + command + k
     * 删除线
