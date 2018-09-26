@@ -1,12 +1,4 @@
-# Docker
-* docker ps
-    * show running containers, use `-a` to show all.
-* docker images
-    * show all images
-* docker run --name new_container_name -p host_port:container_port existing_image_name
-    * run a new container with existing image
-* docker stop container_name
-    * stop the container
+
 
 # Bash
 ## cat
@@ -55,7 +47,6 @@
    - `-r` to recursively search subdirectories
    - `-c` to print a count of matching lines
    - `-o` to print only the matching parts of a matching line
-   - `
 - Replace `yourfile` with `*` to match any file or folder
 #### More regular expression
    - `.` single-character wildcard
@@ -71,10 +62,67 @@
 - egrep: same as `grep -E`, evaluates your PATTERN string as an entended regular expression.
 - fgrep: same as `grep -F`, evaluates your PATTERN string as a fixed string, every character is treated literally.
 
-
+# Docker
+* docker ps
+    * show running containers, use `-a` to show all.
+* docker images
+    * show all images
+* docker run --name new_container_name -p host_port:container_port existing_image_name
+    * run a new container with existing image
+* docker stop container_name
+    * stop the container
+    
 # Evernote:
 * ctrl + command + k
     * 删除线
+
+# gdb
+## A debugger lets you pause a program, examine and change variables and step through code.
+- `gcc -g myprogram.c` compiles myprogram.c with debugging information
+- `gdb a.out` open gdb with file a.out, but it does not run the program.
+- To run the program
+   - `r`
+   - `r arg1 arg2`
+   - `r < file1` running by feeding a file
+### Stepping through code
+- List lines of code
+   - `l` list 10 lines of source code around current line
+   - `l 50` list 10 lines of source code around 50th line
+   - `l myfunction` show myfunction
+- `next` run program until next line, then pause. If the current line is a function, execute the entire function, then pause.
+- `step` run the next instruction, not line. If the current instructions is setting a variable, it is the same as `next`. If it is a function, it will jump into the function, execute the first statement, then pause.
+- `finish` finish executing the current function, then pause (also called step out). Useful if you accidentally stepped into a function.
+### breakpoints and watchpoints
+- Set a breakpoint, the program will pause when it reaches the breakpoint
+   - `break 45` set a breakpoint at line 45
+   - `break myfunction` set a breakpoint at myfunction
+- `watch x == 3` watchpoint which pauses the program when a condition changes (when `x == 3` changes).
+- `continue` resume execution after being paused by a breakpoint/watchpoint. The program will continue it hits the next breakpoint/watchpoint.
+- `delete N` delete breakpoint N
+### Setting variables and calling functions
+- `print x` print current value of `x`
+- `set x = 3` or `set x = y` set `x` to value `3` or another variable `y`
+- `call myfunction()` or `call strlen(mystring)` call user-defined or system functions.
+- `display x` `undisplay x` constantly display value of variable x which is shown after every step or pause.
+### Backtrace and changing frames
+- `bt` backtrace, print the current function stack to show where you are in the current program. 
+- `bt full` backtrace including local varables
+- `up` `down` move to the next frame up or down in the function stack.
+- `return` return from current function.
+### Crashes and core dumps
+- `gdb myprogram core` debug myprogram with "core" as the core dump file
+- `bt` print the backtrace at the point of the crash. Examine variables using the techniques above.
+### Handling signals
+- `handle [signalname] [action]`
+- `handle SIGUSR1 nostop`
+- `handle SIGUSR1 noprint`
+- `handle SIGUSR1 ignore`
+
+
+
+# git
+* git clone depth=1 your_git_repo
+    * only clone current version, no history
 
 # vim:
 * to indent a block of lines
@@ -89,6 +137,3 @@
 ## Provides a number of debugging and profiling tools that help you make your program faster and more correct. The most popular of these tools is called Memcheck, which can detect many memory-related errors that are common in C and C++ programs and that can lead to crashes and unpredicted behaviours.
 - check possible memory leak for C/C++ programs: `valgrind --leak-check=yes myprog arg1 arg2`
 
-# git
-* git clone depth=1 your_git_repo
-    * only clone current version, no history
