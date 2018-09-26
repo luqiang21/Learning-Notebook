@@ -35,6 +35,9 @@
 * gg move to the beginning of the file.
 * G	move to the end of the file
 
+# Valgrind
+## Provides a number of debugging and profiling tools that help you make your program faster and more correct. The most popular of these tools is called Memcheck, which can detect many memory-related errors that are common in C and C++ programs and that can lead to crashes and unpredicted behaviours.
+- check possible memory leak for C/C++ programs: `valgrind --leak-check=yes myprog arg1 arg2`
 
 # git
 * git clone depth=1 your_git_repo
