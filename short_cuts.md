@@ -42,6 +42,34 @@
    - `find /path/to/folder -name '*bat*' \( -type f -o -type l \)`
 - Display found file/folder details
    - `find /path/to/folder -name '*bat*' -ls`
+- Send output of find to a file
+   - `find /path/to/folder -name '*bat*' -fprint FileToPrintTo`
+- Search for and edit a file at the same time:
+   - `find . -name a.c -exec nano '{}' \;`
+
+## grep (global regular expression print)
+### processes text line by line and prints any lines which match a specified PATTERN, Matches a regular expression against text in a file, multiple files, or a stream of input.
+- Find the lines containing `keyword`: `grep "keyword" yourfile`
+- Highlight the `keyword` with color and line number: `grep --color -n "keyword" yourfile`
+   - `-i` to ignore case
+   - `-r` to recursively search subdirectories
+   - `-c` to print a count of matching lines
+   - `-o` to print only the matching parts of a matching line
+   - `
+- Replace `yourfile` with `*` to match any file or folder
+#### More regular expression
+   - `.` single-character wildcard
+   - `?`	The question mark indicates zero or one occurrences of the preceding element. For example, colou?r matches both "color" and "colour".
+   - `*`	The asterisk indicates zero or more occurrences of the preceding element. For example, ab*c matches "ac", "abc", "abbc", "abbbc", and so on.
+   - `+`	The plus sign indicates one or more occurrences of the preceding element. For example, ab+c matches "abc", "abbc", "abbbc", and so on, but not "ac".
+   - `.*` any number of any character.
+   - `{n}` match exactly n times.
+   - `{n,}` match n or more times.
+   - `{n, m}` match at least n times, but not more than m times.
+#### Variant programs
+- rgrep: same as `grep -r`
+- egrep: same as `grep -E`, evaluates your PATTERN string as an entended regular expression.
+- fgrep: same as `grep -F`, evaluates your PATTERN string as a fixed string, every character is treated literally.
 
 
 # Evernote:
