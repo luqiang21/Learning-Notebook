@@ -92,6 +92,7 @@
 - `next` run program until next line, then pause. If the current line is a function, execute the entire function, then pause.
 - `step` run the next instruction, not line. If the current instructions is setting a variable, it is the same as `next`. If it is a function, it will jump into the function, execute the first statement, then pause.
 - `finish` finish executing the current function, then pause (also called step out). Useful if you accidentally stepped into a function.
+- `info local` show local variables
 ### breakpoints and watchpoints
 - Set a breakpoint, the program will pause when it reaches the breakpoint
    - `break 45` set a breakpoint at line 45
@@ -99,6 +100,11 @@
 - `watch x == 3` watchpoint which pauses the program when a condition changes (when `x == 3` changes).
 - `continue` resume execution after being paused by a breakpoint/watchpoint. The program will continue it hits the next breakpoint/watchpoint.
 - `delete N` delete breakpoint N
+- `disable` disable all breakpoints
+- To list current breakpoints: `info break`
+- To delete a breakpoint: `del [breakpointnumber]`
+- To temporarily disable a breakpoint: `dis [breakpointnumber]`
+- To enable a breakpoint: `en [breakpointnumber]`
 ### Setting variables and calling functions
 - `print x` print current value of `x`
 - `set x = 3` or `set x = y` set `x` to value `3` or another variable `y`
