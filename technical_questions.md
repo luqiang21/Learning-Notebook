@@ -14,6 +14,31 @@
 	- In general, you'll only want to normalize your data if you're going to be using a machine learning or statistics technique that assumes your data is normally distributed.
 
 # Algorithms
+## Gaussian Mixture Models (similar to Kmeans) from [youtube link](https://www.youtube.com/watch?v=REypj2sy_5U)
+- Recall types of clustering methods
+	- hard clustering: cluters do not overlap
+		- element either belongs to a cluster or it does not
+	- soft clustering: clusters may overlap
+		- strength of association between clusters and instances
+- Mixture models
+	- Probabilitically-grounded way of doing soft clustering
+	- Each cluster: a generative model (gaussian or multinomial)
+	- Parameters (e.g. mean/covariance are unknown)
+- Expectation-Maximization (EM): Automatically discover all parameters for the K "sources"
+	- Start with two randomly placed Gaussians ($\mu_a$, $\sigma_a^2$), ($\mu_b$, $\sigma_b^2$)
+	- For each point: $P(b|x_i)= $ does it look like it came from b?
+	- Adjust ($\mu_a$, $\sigma_a^2$) and ($\mu_b$, $\sigma_b^2$) to fit points assigned to them
+	- Iterate until convergence
+- Compared with K-means:
+	- Similar to K-means:
+		- Sensitive to starting point, converges to local maximum
+		- Convergence: when change in $P(x_1, \cdots, x_n)$ is sufficiently small
+		- Cannot discover K (likelihood keeps growing with K)
+	- Different from K-means:
+		- Soft clustering: instance can come from multiple "clusters"
+		- Co-variance: notion of "distance" changes over time
+
+
 ## why BFS has complexity of O(|V| + |E|)
 I hope this is helpful to anybody having trouble understanding computational time complexity for Breadth First Search a.k.a BFS.
 
