@@ -1,6 +1,17 @@
 
 
 # Bash
+- `$?` expands to the exit status of the most recently executed foreground pipeline. In simpler terms, it's the exit status of the last command.
+   - If the value of `$?` is 0, then the previous process did terminate normally (or successfully). Otherwise there was some error.
+- `$0`: The filename of the current script.
+- `$#`: The number of arguments supplied to a script.
+- `$$`: The process number of the current shell. For shell scripts, this is the process ID under which they are executing.
+- `$@` expands into a list of separate parameters. Whereas, `$*` is one parameter consisting of all the parameters added together as one string. Read [this](https://www.thegeekstuff.com/2010/05/bash-shell-special-parameters/)
+
+
+
+## more: allows you to display output in the terminal one page at a time.
+
 ## cat
 - display multiple files' contents: `cat file1_path file2_path `
 - create a file called test and type desired test
@@ -71,6 +82,7 @@
     * run a new container with existing image
 * docker stop container_name
     * stop the container
+- `docker system prune -a` remove any stopped images and all unused images.
     
 # Evernote:
 * ctrl + command + k
