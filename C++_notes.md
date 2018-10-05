@@ -572,5 +572,8 @@ T getBigger(T input1, U input2)
 }
 ```
 
-
-### write a matrix class
+### std::upper_bound and std::lower_bound for Vector in STL
+- `Iterator lower_bound (Iterator first, Iterator last, const val)`
+- `Iterator upper_bound (Iterator first, Iterator last, const val)`
+- `lower_bound` returns an iterator pointing to the first element in the range \[first,last) which has a value not less than `val`.
+- `upper_bound` returns an iterator pointing to the first element in the range \[first,last) which has a value greater than `val`.
