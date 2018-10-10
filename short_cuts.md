@@ -10,7 +10,40 @@
 
 
 
-## more: allows you to display output in the terminal one page at a time.
+## `more`: allows you to display output in the terminal one page at a time.
+- specify the size the screen: `more -u5 <filename>`
+- start from a certain line number: `more +u6 <filename>` 
+- they can be combined: `more +u3 -u2 <filename>` show 2 lines starting from line 3
+- start from a certain line of text: `more +/"the text to search for" <filename>`
+- *display current line number* by pressing the euqal key (`=`)
+- **search text**
+   - `/hello world` find the first ocurrence of text "hello world"
+   - If you want to find the 5th occurrence of "hello world" use "5/"hello world""
+   - Pressing the 'n' key will find the next occurrence of the previous search term. If you used a number prior to the search term that will take precedence. So if you searched for the 5th occurrence of "hello world" then pressing "n" will look for the next 5th occurrence of "hello world".
+   - Pressing the apostrophe (') key will go to the place where the search started.
+
+## `less`: If you want to read through a large text file it is better to use the less command over an editor as it doesn't load the entire thing into memory. It loads each page into memory a page at a time making it more efficient.
+- `ps -ef | less` show a list of running processes one page at a time.
+- You can change the number of lines that are scrolled when you press space key of `f` key by pressing the number immediately before pressing the key.
+   - To make this number default, you can enter the number followed by the `z` key.
+   - `F` will keep trying even if the end of the file is reached. This is helpful for an updating file.
+- `b` or `w` scroll one window back
+- Press ESC immediately prior to the space bar, allow you to continue scrolling when you have reached the end of the output.
+- `return`, `j` or `e` allow you scroll one line at a time.
+- `k` or `y` scroll one line back at a time.
+- `r` to repaint the screen or `R` to repaint the screen discarding any output that has been buffered.
+- `g` to the beginning of the output, `G` to the end of the output. number followed by `%` or `p` go to a certain percentage of the file.
+- `m` followed by a lowercase letter to set a marker, single quote to go to a marker
+- *search for a pattern* use a forward slash key
+- *load a new file into the output* `:e myfile.txt`
+
+## `tail` shows the last 10 lines of a file, `head` shows first 10 lines of a file.
+- `tail -n20 <filename>` specify the number of lines to see
+- `tail -n+20 <filename>` speicify the starting line to see
+- **monitor log file** 
+   - check how the log changes every so many seconds: `tail -F -s20 <filename>`
+   - continue monitoring until a process dies: `tail -F --pid=1234 <filename>`
+   - to find the process id you can: `ps -ef | grep <programName>`
 
 ## cat
 - display multiple files' contents: `cat file1_path file2_path `
