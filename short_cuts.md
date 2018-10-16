@@ -102,20 +102,21 @@
    - `{n,}` match n or more times.
    - `{n, m}` match at least n times, but not more than m times.
 #### Variant programs
-- rgrep: same as `grep -r`
-- egrep: same as `grep -E`, evaluates your PATTERN string as an entended regular expression.
-- fgrep: same as `grep -F`, evaluates your PATTERN string as a fixed string, every character is treated literally.
+- `rgrep`: same as `grep -r`
+- `egrep`: same as `grep -E`, evaluates your PATTERN string as an entended regular expression.
+- `fgrep`: same as `grep -F`, evaluates your PATTERN string as a fixed string, every character is treated literally.
 
 # Docker
-* docker ps
+* `docker ps`
     * show running containers, use `-a` to show all.
-* docker images
+* `docker images`
     * show all images
-* docker run --name new_container_name -p host_port:container_port existing_image_name
+* `docker run --name new_container_name -p host_port:container_port existing_image_name`
     * run a new container with existing image
-* docker stop container_name
+* `docker stop container_name`
     * stop the container
 - `docker system prune -a` remove any stopped images and all unused images.
+- `docker kill $(docker ps -q)` kill all running images
     
 # Evernote:
 * ctrl + command + k
