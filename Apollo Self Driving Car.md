@@ -1,4 +1,5 @@
-# Mapping
+# Notes From Udacity Free Course
+## Mapping
 - HD map: high definition map, cm level precision.
 - ROI: region of interest.
 - GNSS: Global Navigation Satellite System, GPS is the most popular GNSS.
@@ -10,7 +11,7 @@
     - high frequency update, up to 1000 Hz.
     - Motion error increases with time. Need to be combined with GPS.
 
-# Localization
+## Localization
 - LiDAR Localization
     - ICP (Iterative Closest Point)
         - For a point in 1 scan, find another matching point in the other scan.
@@ -37,7 +38,7 @@
     - Inertial Navigation solution is used for the prediction step of the Kalman Filter.
     - GNSS and LiDAR are used for the update step of the Kalman Filter.
 
-# Perception
+## Perception
 - Perception task for a self-driving car:
     - Detection: where an object is in the environment.
     - Classification: what the object is.
@@ -69,7 +70,7 @@
     - Uses an infrared laser beam (wave length about 900 nm).
     - Has a much higher spatial resolution than Radar.
 
-# Prediction
+## Prediction
 - Model-based Prediction
     - Analytical based on equations.
 - Data-driven Prediction
@@ -78,7 +79,7 @@
     - Predict the probability of the obstacle to follow a lane sequence based on
     RNNs trained from lane sequences and obstacle status.
 
-# Planning
+## Planning
 - Overall planning structure
 
     ```
@@ -117,7 +118,7 @@
      coordinate frame. Then we can combine them to construct a 3D trajectory composed
      of 2D way points and 1D time stamps.
 
-# Control
+## Control
 Use variable control inputs to minimize deviation from target trajectory and maximize
 passenger comfort.
 - PID
@@ -165,3 +166,12 @@ passenger comfort.
         - Work with different cost functions
     - Disadvantage:
         - Complex, slower, harder to implement
+
+# My notes when reading Apollo code
+## Control
+- What is steer_ratio?
+    - The turn of the steering wheel and the turn of the wheels.
+- `steer_single_direction_max_degree`
+    - It is the maximum turn of steering wheel, not the maximum turn degree.
+    - about 470 in apollo configuration file
+    
