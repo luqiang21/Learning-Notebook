@@ -168,10 +168,22 @@ passenger comfort.
         - Complex, slower, harder to implement
 
 # My notes when reading Apollo code
+## Localization
+- `orientation` is a quaternion that represents the rotation from the IMU coordinate (Right/Forward/Up) to the world coordinate (East/North/Up).
+- `heading` is zero when the car is facing East, and positive when facing North.
+
 ## Control
 - What is steer_ratio?
-    - The turn of the steering wheel and the turn of the wheels.
+    - > The steering ratio is the ratio of the number of degrees of turn of the steering wheel to the number of degrees the wheel(s) turn as a result. In motorcycles, delta tricycles and bicycles, the steering ratio is always 1:1, because the steering wheel is fixed to the front wheel. A steering ratio of x:y means that a turn of the steering wheel x degree(s) causes the wheel(s) to turn y degree(s). In most passenger cars, the ratio is between 12:1 and 20:1.
 - `steer_single_direction_max_degree`
     - It is the maximum turn of steering wheel, not the maximum turn degree.
     - about 470 in apollo configuration file
     
+### Currently, two strategies for controllers in Apollo:
+- Longitudinal controller (PID) + lateral controller (LQR)
+	- PID outputs throttle and brake
+	- LQR output steering
+- MPC controller
+	- Build a model of the vehicle
+	- Use an optimization engine to calculate control inputs over a finite time horizon
+	- Implement the first set of control inputs 
