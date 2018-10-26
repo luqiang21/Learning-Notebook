@@ -63,6 +63,10 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 #### What is a virtual function?
 - Virtual function is a function in the base class with keyword virtual declared, and the goal is to let the user know that this function is meant to be overridden (or redefined) by the derived class.
 
+#### What is volatile keyword?
+- Prevent compiler from optimizing code.
+
+
 #### Static Keyword
 - Static is a keyword in C++ used to give special characteristics to an element. Static elements are allocated storage only once in a program lifetime in static storage area. And they have a scope till the program lifetime. Static Keyword can be used with following:
 
