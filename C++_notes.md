@@ -498,6 +498,8 @@ the array and call that many destructors.
 - setw() will set field width.
 - setw() sets the number of characters to be used as the field width for the **next** insertion operation.
 
+
+# Libraries
 ## STL
 ### Vector
 - std::vector::begin
@@ -581,3 +583,34 @@ T getBigger(T input1, U input2)
 - `Iterator upper_bound (Iterator first, Iterator last, const val)`
 - `lower_bound` returns an iterator pointing to the first element in the range \[first,last) which has a value not less than `val`.
 - `upper_bound` returns an iterator pointing to the first element in the range \[first,last) which has a value greater than `val`.
+
+## Eigen
+- Initialization
+    - ```
+        // Initialize A
+        A << 1.0 f , 0.0 f , 0.0 f ,
+        0.0 f , 1.0 f , 0.0 f ,
+        0.0 f , 0.0 f , 1.0 f ;
+        // Initialize B by accessing individual elements
+        for i = 1:4 {
+            for j = 1:4 {
+                B (j , i ) = 0.0;
+            }
+        }  ```
+    - the outer loop runs over the columns, and the inner loop iterates over the rows. Doing it the other way around would have worked too,but would have been less efficient. This is because Eigen stores matrices in column-major order by default.
+    - unlike C/C++, or Python arrays, Eigen uses parantheses rather than square brackets to access matrix elements.
+- Utility functions
+    - ```
+        // Set each coefficient to a uniform random value in the range
+        [ -1 , 1]
+        A = Matrix3f :: Random () ;
+        // Set B to the identity matrix
+        B = Matrix4d :: Identity () ;
+        // Set all elements to zero
+        A = Matrix3f :: Zero () ;
+        // Set all elements to ones
+        A = Matrix3f :: Ones () ; 
+        // Set all elements to a constant value
+        B = Matrix4d :: Constant (4.5) ;```
+- Equality (==) and inequality (!=) are the only relational operators that work with matrices. Two matrices are considered equal if all corresponding coefficients are equal.
+- Note operations do not work in-place, a new matrix is returned.
