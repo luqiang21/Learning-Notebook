@@ -8,7 +8,10 @@
 - `$$`: The process number of the current shell. For shell scripts, this is the process ID under which they are executing.
 - `$@` expands into a list of separate parameters. Whereas, `$*` is one parameter consisting of all the parameters added together as one string. Read [this](https://www.thegeekstuff.com/2010/05/bash-shell-special-parameters/)
 
-
+## `ps` related
+- `ps aux` to show running processes
+- `ps aux | egrep "your_key_word | PID"` to grep your desired process and show header
+- `kill your_process_PID` default kill method, if not working, try `kill -KILL your_process_PID`
 
 ## `more`: allows you to display output in the terminal one page at a time.
 - specify the size the screen: `more -u5 <filename>`
@@ -92,6 +95,16 @@
    - `-c` to print a count of matching lines
    - `-o` to print only the matching parts of a matching line
 - Replace `yourfile` with `*` to match any file or folder
+#### grep show around lines
+- For  **BSD**  or  **GNU**  `grep`  you can use  `-B num`  to set how many lines before the match and  `-A num`for the number of lines after the match.
+	```
+	grep -B 3 -A 2 foo README.txt
+	```
+- If you want the same number of lines before and after you can use  `-C num`.	
+	```
+	grep -C 3 foo README.txt
+	```
+- This will show 3 lines before and 3 lines after.
 #### More regular expression
    - `.` single-character wildcard
    - `?`	The question mark indicates zero or one occurrences of the preceding element. For example, colou?r matches both "color" and "colour".
