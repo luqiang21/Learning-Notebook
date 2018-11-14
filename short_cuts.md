@@ -7,6 +7,7 @@
 - `$#`: The number of arguments supplied to a script.
 - `$$`: The process number of the current shell. For shell scripts, this is the process ID under which they are executing.
 - `$@` expands into a list of separate parameters. Whereas, `$*` is one parameter consisting of all the parameters added together as one string. Read [this](https://www.thegeekstuff.com/2010/05/bash-shell-special-parameters/)
+- `yourcommand &> filename` redirects both  `stdout`  and  `stderr`  from `yourcommand` to filename.
 
 ## `ps` related
 - `ps aux` to show running processes
