@@ -190,6 +190,7 @@
 * git clone depth=1 your_git_repo
     * only clone current version, no history
 - `git add -v -u` verbose and only add updated files not new files
+- After `git fetch`, `git log` won't show new commits on `origin/master`, you need to use `git log origin/master` to show commits from both local `master` and `origin/master`.
 
 # vim:
 * to indent a block of lines
