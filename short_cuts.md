@@ -191,6 +191,8 @@
     * only clone current version, no history
 - `git add -v -u` verbose and only add updated files not new files
 - After `git fetch`, `git log` won't show new commits on `origin/master`, you need to use `git log origin/master` to show commits from both local `master` and `origin/master`.
+- To reset some file that has been added to stage, `git reset file_name`
+- To abandon changes in one file that has not been added to stage, `git checkout file_name`
 
 # vim:
 * to indent a block of lines
