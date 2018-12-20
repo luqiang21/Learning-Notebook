@@ -10,3 +10,4 @@
 
 ### Tips
 - You shouldn't drag a real object, you should drag the prefab from `Project`
+- `ctrl`/`cmd` + left arrow to collapse all elements
