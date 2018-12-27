@@ -8,6 +8,11 @@
 	- (Ctrl-Shift-1) = Load Selection 1
 - If you need to find multiple or all gameobjects with a specific component, you can use the type filter in the search boxes. To specify a type instead of a name, use the format “t: ClassName”. For example to find all AudioSources, you’d use “t: AudioSource”.
 
+## C#
+- `#define` You use it to define a symbol. When you use the symbol as the expression that's passed to the `#if` directive, the expression will evaluate to `true`. 
+	- If you use `#if` with a undefined symbol, the symbol will be evaluated to `false`.
+	- You can also undefine a symbol using `#undef`, then the expression will evaluate to `false`.
+	
 ### Tips
 - You shouldn't drag a real object, you should drag the prefab from `Project`
 - `ctrl`/`cmd` + left arrow to collapse all elements
