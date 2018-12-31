@@ -9,6 +9,10 @@
 - `$@` expands into a list of separate parameters. Whereas, `$*` is one parameter consisting of all the parameters added together as one string. Read [this](https://www.thegeekstuff.com/2010/05/bash-shell-special-parameters/)
 - `yourcommand &> filename` redirects both  `stdout`  and  `stderr`  from `yourcommand` to filename.
 
+## `nohup`
+- When using the command shell, prefixing a command with nohup prevents the command from being aborted automatically when you log out or exit the shell. 
+- The name nohup stands for "no hangup." The hangup (HUP) signal, which is normally sent to a process to inform it that the user has logged off (or "hung up"), is intercepted by nohup, allowing the process to continue running.
+
 ## `ps` related
 - `ps aux` to show running processes
 - `ps aux | egrep "your_key_word | PID"` to grep your desired process and show header
