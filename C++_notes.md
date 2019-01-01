@@ -584,6 +584,24 @@ T getBigger(T input1, U input2)
 - `lower_bound` returns an iterator pointing to the first element in the range \[first,last) which has a value not less than `val`.
 - `upper_bound` returns an iterator pointing to the first element in the range \[first,last) which has a value greater than `val`.
 
+
+### Lambda expression
+-   ```  
+    [ capture clause ] (parameters) -> return-type  
+    {   
+       definition of method   
+    } 
+    ```
+- We can capture external variables from enclosing scope by three ways :
+    - Capture by reference
+    - Capture by value
+    - Capture by both (mixed capture)
+- Syntax used for capturing variables :
+    - [&] : capture all external variable by reference
+    - [=] : capture all external variable by value
+    - [a, &b] : capture a by value and b by reference
+- A lambda with empty capture clause [ ] can access only those variable which are local to it.
+
 ## Eigen
 - Initialization
     - ```
