@@ -66,6 +66,9 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 #### What is volatile keyword?
 - Prevent compiler from optimizing code.
 
+#### What is final keyword?
+1. Prevent overriding of virtual function using final specifier.
+2. Final specifier in C++ 11 can also be used to prevent inheritance of class / struct. If a class or struct is marked as final then it becomes non inheritable and it cannot be used as base class/struct.
 
 #### Static Keyword
 - Static is a keyword in C++ used to give special characteristics to an element. Static elements are allocated storage only once in a program lifetime in static storage area. And they have a scope till the program lifetime. Static Keyword can be used with following:
