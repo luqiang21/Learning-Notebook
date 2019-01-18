@@ -8,6 +8,7 @@
 - `$$`: The process number of the current shell. For shell scripts, this is the process ID under which they are executing.
 - `$@` expands into a list of separate parameters. Whereas, `$*` is one parameter consisting of all the parameters added together as one string. Read [this](https://www.thegeekstuff.com/2010/05/bash-shell-special-parameters/)
 - `yourcommand &> filename` redirects both  `stdout`  and  `stderr`  from `yourcommand` to filename.
+- `$(command)` returns the output of `command` which stands for command substitution
 
 ## `nohup`
 - When using the command shell, prefixing a command with nohup prevents the command from being aborted automatically when you log out or exit the shell. 
