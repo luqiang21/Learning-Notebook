@@ -139,6 +139,26 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 
   That prevents double declaration of any identifiers such as types, enums and static variables.
 
+#### ## (double number sign) 
+- operator concatenates two tokens in a macro invocation (text and/or arguments) given in a macro definition.
+- If a macro XY was defined using the following directive:
+    - #define XY(x,y)    x##y
+- the last token of the argument for x is concatenated with the first token of the argument for y.
+- The following examples demonstrate the use of the ## operator:
+    ```cpp
+    #define ArgArg(x, y)          x##y
+    #define ArgText(x)            x##TEXT
+    #define TextArg(x)            TEXT##x
+    #define TextText              TEXT##text
+    #define Jitter                1
+    #define bug                   2
+    #define Jitterbug             3
+    Invocation	Result of macro expansion
+    ArgArg(lady, bug)	ladybug
+    ArgText(con)	conTEXT
+    TextArg(book)	TEXTbook
+    ```
+
 #### Why do we use setters and getters?
 - Mutators (setters) are used to set values of private data members. One of the main goals of a mutator is to check correctness of the value to be set to data member.
 
