@@ -96,12 +96,12 @@ V + E
 	repeated PhoneNumber phone = 4;
 	}
   ```
-- Remember the " = 1", " = 2" markers on each element identify the unique "tag" that field uses in the binary encoding. Tag numbers 1-15 require one less byte to encode than higher numbers, so as an optimization you can decide to use those tags for the commonly used or repeated elements, leaving tags 16 and higher for less-commonly used optional elements. Each element in a repeated field requires re-encoding the tag number, so repeated fields are particularly good candidates for this optimization.
-- 'required': a value for the field must be provided, otherwise the message will be considered "uninitialized"
-- 'optional': the field may or may not be set.
-- 'repeated': the field may be repeated any number of times (including zero). This
-is the most popular choice.
-
+	- Remember the " = 1", " = 2" markers on each element identify the unique "tag" that field uses in the binary encoding. Tag numbers 1-15 require one less byte to encode than higher numbers, so as an optimization you can decide to use those tags for the commonly used or repeated elements, leaving tags 16 and higher for less-commonly used optional elements. Each element in a repeated field requires re-encoding the tag number, so repeated fields are particularly good candidates for this optimization.
+	- 'required': a value for the field must be provided, otherwise the message will be considered "uninitialized"
+	- 'optional': the field may or may not be set.
+	- 'repeated': the field may be repeated any number of times (including zero). This
+	is the most popular choice.
+- Compiled protobuf will automatically have several methods to interact with data field. `void set_allocated_xxx(string* value)` is to set the `string` object to the field and frees the previous field value if it exists. If the `string` pointer is not `NULL`, the message takes ownership of the allocated `string` object and `has_xxx()` will return `true`. The message is free to delete allocated `string` object at any time, so references to the object may be invalidated. Otherwise, if the `value` is `NULL`, the behavior is the same as calling `clear_xxx()`.
 ## Core dump
 - A core dump is a file containing a process's address space(memory) when the process terminates unexpectedly. Core dumps may be produced on-demand (such as by a debuger), or automatically upon termination. Core dumps are triggered by the kernel in reponse to program crashes, and maybe passed to a helper program for further processing.
 - One can this of it as a full-length "snapshot" of RAM.
