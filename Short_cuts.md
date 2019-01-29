@@ -10,6 +10,12 @@
 - `$@` expands into a list of separate parameters. Whereas, `$*` is one parameter consisting of all the parameters added together as one string. Read [this](https://www.thegeekstuff.com/2010/05/bash-shell-special-parameters/)
 - `yourcommand &> filename` redirects both  `stdout`  and  `stderr`  from `yourcommand` to filename.
 - `$(command)` returns the output of `command` which stands for command substitution
+	- You can also use `` `command` `` which is the same, shell might not support
+- If you are in root folder `/`, you need `sudo` to create a file. However, following command will not work
+	- `sudo echo "hello" > file` will give you permission error since it needs to create the `file` first to complete redirection, `sudo echo "hello" | sudo > file` is the same since we are giving `sudo` to `>`.
+	- You can use `tee` to solve the problem  
+		> `tee [OPTION]... [FILE]...` copy standard input to each FILE and also to standard output
+	- `echo "hello" | sudo tee file`
 
 ## `nohup`
 - When using the command shell, prefixing a command with nohup prevents the command from being aborted automatically when you log out or exit the shell. 
