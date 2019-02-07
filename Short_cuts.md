@@ -118,6 +118,8 @@
 	grep -C 3 foo README.txt
 	```
 - This will show 3 lines before and 3 lines after.
+- To grep special symbols like `>` use `egrep`
+
 #### More regular expression
    - `.` single-character wildcard
    - `?`	The question mark indicates zero or one occurrences of the preceding element. For example, colou?r matches both "color" and "colour".
