@@ -1,3 +1,7 @@
+# Random tips
+## Chrome
+- When you encounter certificate expired for a website, you can type `thisisunsafe` to visit the website.
+
 # C++
 
 - what are the 3 foundations of C++?
