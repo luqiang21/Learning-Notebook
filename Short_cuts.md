@@ -107,6 +107,7 @@
    - `-r` to recursively search subdirectories
    - `-c` to print a count of matching lines
    - `-o` to print only the matching parts of a matching line
+   - `-v` == `--invert-math` to select non-matching lines
 - Replace `yourfile` with `*` to match any file or folder
 #### grep show around lines
 - For  **BSD**  or  **GNU**  `grep`  you can use  `-B num`  to set how many lines before the match and  `-A num`for the number of lines after the match.
