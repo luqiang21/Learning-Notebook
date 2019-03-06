@@ -1,6 +1,7 @@
 
 
 # Bash
+- `1>&2` redirect `stdout` to `stderr`, `1` is `stdout` and `2` is `stderr`.
 - `!!` Execute last command again.
 - `$?` expands to the exit status of the most recently executed foreground pipeline. In simpler terms, it's the exit status of the last command.
    - If the value of `$?` is 0, then the previous process did terminate normally (or successfully). Otherwise there was some error.
