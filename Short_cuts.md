@@ -1,6 +1,8 @@
 
 
 # Bash
+
+
 - `1>&2` redirect `stdout` to `stderr`, `1` is `stdout` and `2` is `stderr`.
 - `!!` Execute last command again.
 - `$?` expands to the exit status of the most recently executed foreground pipeline. In simpler terms, it's the exit status of the last command.
@@ -17,7 +19,12 @@
 	- You can use `tee` to solve the problem  
 		> `tee [OPTION]... [FILE]...` copy standard input to each FILE and also to standard output
 	- `echo "hello" | sudo tee file`
-
+## `getopts`
+- The option-string tells getopts which options to expect and which of them must have an argument. The syntax is very simple every option character is simply named as is, this example-string would tell getopts to look for -f, -A and -x:
+	- `getopts fAx VARNAME`
+- When you want getopts to expect an argument for an option, just place a : (colon) after the proper option flag. If you want -A to expect an argument (i.e. to become -A SOMETHING) just do:
+	- `getopts fA:x VARNAME`
+	
 ## `nohup`
 - When using the command shell, prefixing a command with nohup prevents the command from being aborted automatically when you log out or exit the shell. 
 - The name nohup stands for "no hangup." The hangup (HUP) signal, which is normally sent to a process to inform it that the user has logged off (or "hung up"), is intercepted by nohup, allowing the process to continue running.
