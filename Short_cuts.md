@@ -216,7 +216,8 @@
 - After `git fetch`, `git log` won't show new commits on `origin/master`, you need to use `git log origin/master` to show commits from both local `master` and `origin/master`.
 - To reset some file that has been added to stage, `git reset file_name`
 - To abandon changes in one file that has not been added to stage, `git checkout file_name`
-
+- You can use  [git checkout](http://git-scm.com/docs/git-checkout)  to check a single file out of the stash:
+	- `git checkout stash@{0} -- <filename>`
 # vim:
 * to indent a block of lines
     * V enter visual mode, press j select lines you want to indent, press >
