@@ -218,6 +218,11 @@
 - To abandon changes in one file that has not been added to stage, `git checkout file_name`
 - You can use  [git checkout](http://git-scm.com/docs/git-checkout)  to check a single file out of the stash:
 	- `git checkout stash@{0} -- <filename>`
+- Rebase
+	- Suppose you are working on a branch `feature` and want to rebase `feature` on latest `master`
+	- You are on `feature` and do `git rebase master`
+	- You get conflict since both of the branches have modified same file `test.txt`
+	- To ignore every modification from `master` and use `feature` branch, you do `git checkout --theirs test.txt` because you are rebasing on top of `master`, `master` is `ours`.
 # vim:
 * to indent a block of lines
     * V enter visual mode, press j select lines you want to indent, press >
