@@ -76,3 +76,24 @@ intervals (by releasing and acquiring the lock after a number of bytecode instru
 as well as at the start of long-running operations (e.g. on file input/output requests).
 This scheme avoids problems that could arise if multiple threads were to update
 Python system data at the same time.
+
+## FAQ
+### What is the difference between `__init__` and `__call__`?
+
+- The first is used to initialise newly created object, and receives arguments used to do that:
+```
+    class Foo:
+        def __init__(self, a, b, c):
+            # ...
+
+    x = Foo(1, 2, 3) # __init__
+```
+- The second implements function call operator.
+```
+    class Foo:
+        def __call__(self, a, b, c):
+            # ...
+
+    x = Foo()
+    x(1, 2, 3) # __call__
+```
