@@ -270,6 +270,7 @@ the array and call that many destructors.
 
         ```
 #### Heap and stack in memory
+- Stack is used for static memory allocation and Heap for dynamic memory allocation, both stored in the computer's RAM.
 - The stack is the memory set aside as scratch space for a thread of execution. When a function is called, a block is reserved on the top of the stack for local variables and some bookkeeping data. When that function returns, the block becomes unused and can be used the next time a function is called.
     - The advantage of using the stack to store variables, is that memory is managed for you. You don't have to allocate memory by hand, or free it once you don't need it any more.
     -  The stack is always reserved in a LIFO (last in first out) order; the most recently reserved block is always the next block to be freed. This makes it really simple to keep track of the stack; freeing a block from the stack is nothing more than adjusting one pointer.
