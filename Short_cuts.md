@@ -223,6 +223,11 @@
 	- You are on `feature` and do `git rebase master`
 	- You get conflict since both of the branches have modified same file `test.txt`
 	- To ignore every modification from `master` and use `feature` branch, you do `git checkout --theirs test.txt` because you are rebasing on top of `master`, `master` is `ours`.
+- `git diff`  can show you the difference between two commits:
+	```
+	git diff mybranch master -- myfile.cs
+	```
+
 # vim:
 * to indent a block of lines
     * V enter visual mode, press j select lines you want to indent, press >
