@@ -227,6 +227,13 @@
 	```
 	git diff mybranch master -- myfile.cs
 	```
+- Push local `branch1` to remote `branch2`
+	- `git push origin branch1:branch2`
+- Push remote `branch1` to a new remote `branch2`
+	- `git co origin/branch1`
+	- `git co -b branch2`
+	- `git push --set-upstream origin branch2`
+	- `git push`
 
 # vim:
 * to indent a block of lines
