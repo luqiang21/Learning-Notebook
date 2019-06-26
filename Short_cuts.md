@@ -243,6 +243,12 @@
 * $	moves the cursor to the end of the line.
 * gg move to the beginning of the file.
 * G	move to the end of the file
+* `d` delete and stay in command mode, `c` cut and stay in insert mode, `y` yank, following operations work for all left commands.
+	* `dl` delete a letter
+	* `dw` delete a word
+	* `dd` delete a line
+	* `5dd` delete 5 lines
+* `p` paste after cursor, `P` paste before cursor
 
 # Valgrind
 ## Provides a number of debugging and profiling tools that help you make your program faster and more correct. The most popular of these tools is called Memcheck, which can detect many memory-related errors that are common in C and C++ programs and that can lead to crashes and unpredicted behaviours.
