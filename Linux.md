@@ -11,3 +11,14 @@
 | `lib64` | 64-bit system libraries |
 | `/media` | Mount points for removable media |
 | `/mnt` | Temporarily mounted filesystems |
+| `/opt` | Optional application software packages |
+| `/proc` | Virtual filesystem providing process and kernel info as files |
+| `/root` | Home directory for the root user |
+| `/run` | Run-time configuration data |
+| `/sbin` | Essential system binaries |
+| `/srv` | Site-specific data served by this system |
+| `/sys` | Contains information about the devices connected to the computer |
+| `/tmp` | Temporary files |
+| `/usr` | Read-only user data; contains the majority of utilities and applications |
+| `/var` | Variable files whose content is expected to change during normal operation |
+
