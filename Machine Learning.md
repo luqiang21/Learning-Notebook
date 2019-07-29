@@ -34,6 +34,16 @@
         - compression set: groups of points that are close to each other but not close to any existing centroids, these points are summarized but not assigned to any existing cluster.
         - retained set: isolated points waiting to be assigned to compression set
 
+# Reinforcement Learning
+- The Deep Mind Paper I explained partially here: https://www.freecodecamp.org/news/explained-simply-how-deepmind-taught-ai-to-play-video-games-9eb5f38c89ee/
+- Markov Decision Process (MDP)
+- Value function
+- Action-Value function
+- Advantage function
+- In model-based RL, we use the model and cost function to find an optimal trajectory of states and actions (optimal control).
+- Exploration vs Exploitation
+    - Exploration 
+        - epsilon-greedy: We pick the action with highest Q value but yet we allow a small chance of selecting other random actions
 
 # Pandas
 
