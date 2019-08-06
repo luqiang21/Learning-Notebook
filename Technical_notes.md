@@ -1,4 +1,7 @@
 # Random tips
+## General programming
+- Inheritance: if you have same property fields in your derived classes from same base class, and you want to remove these same fields from derived classes and make one in the base class. You can just do it since property fields are accessed by name. The data associated with the fields will be kept if you move them from the derived class to the base class.
+
 ## Chrome
 - When you encounter certificate expired for a website, you can type `thisisunsafe` to visit the website.
 
