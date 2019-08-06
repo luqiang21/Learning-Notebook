@@ -25,6 +25,10 @@
 			- Members (methods, fields, properties, events, nested types).
 		- Attributes.
 			- Additional descriptive elements that modify types and members.
+- Accessibility of members [ref](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/accessibility-levels)
+	- Defaultly, the accessibility for a member is `internal` not `private`. [ref](https://stackoverflow.com/questions/8479214/any-reason-to-write-the-private-keyword-in-c)
+	- `internal` means within same `dll` file, members are accessible by other classes, not accessible by other `dll` file.
+	- if `private`, member will only be accessible within this class.
 	
 ### Tips
 - You shouldn't drag a real object, you should drag the prefab from `Project`
