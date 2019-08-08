@@ -29,7 +29,25 @@
 	- Defaultly, the accessibility for a member is `internal` not `private`. [ref](https://stackoverflow.com/questions/8479214/any-reason-to-write-the-private-keyword-in-c)
 	- `internal` means within same `dll` file, members are accessible by other classes, not accessible by other `dll` file.
 	- if `private`, member will only be accessible within this class.
-	
+- Extension methods
+	- Extension methods enable you to "add" methods to existing types without creating a new derived type, recompiling, or otherwise modifying the original type. Extension methods are a special kind of static method, but they are called as if they were instance methods on the extended type.
+	- For example following code can work across your project for dictionaries.
+	```c#
+	    public static class Helper
+	    {
+		public static TValue GetOrCreate<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) where TValue : new()
+		{
+		    TValue val;
+
+		    if (!dict.TryGetValue(key, out val))
+		    {
+			val = new TValue();
+			dict.Add(key, val);
+		    }
+		    return val;
+		}
+	    }
+	```
 ### Tips
 - You shouldn't drag a real object, you should drag the prefab from `Project`
 - `ctrl`/`cmd` + left arrow to collapse all elements
