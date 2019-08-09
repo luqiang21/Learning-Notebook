@@ -4,6 +4,11 @@ Modern object-oriented (OO) languages provide 3 capabilities:
 - inheritance
 - polymorphism
 
+# Notes
+- Curiously Recurring Template Pattern (CRTP)
+    - CRTP is a design pattern in C++ in which a class X derives from a class template instantiation using X itself as template argument. More generally it is known as F-bound polymorphism.
+    - CRTP is one way to achieve static polymorphism which avoids the cost of VTable and VPtr due to dynamic polymorphism.
+
 # Basic Interview Questions
 
 #### Definitions of class and object
