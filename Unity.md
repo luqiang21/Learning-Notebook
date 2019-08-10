@@ -52,6 +52,7 @@
 	- interfaces can have properties but not fields
 	- Fields are normal variable members of a class. Generally, you should declare your fields as private, then use Properties to get and set their values. By this way you won’t affect their values them directly. This is common case practice since having public members violates the Encapsulation concept in OOP. [ref](https://medium.com/omarelgabrys-blog/properties-vs-fields-in-c-6cec86c59dc9)
 	- They are actually special methods called “accessors”. Properties are called accessors because they offer a way to get and set a field if you have a private field. They have two codes inside; set{}; and get{}; called “property accessors”.
+- `System.Linq` provide `First()`, `Last()` and othe functions for array like data structures like List through Extension methods.
 ### Tips
 - You shouldn't drag a real object, you should drag the prefab from `Project`
 - `ctrl`/`cmd` + left arrow to collapse all elements
