@@ -8,7 +8,7 @@
 	- (Ctrl-Shift-1) = Load Selection 1
 - If you need to find multiple or all gameobjects with a specific component, you can use the type filter in the search boxes. To specify a type instead of a name, use the format “t: ClassName”. For example to find all AudioSources, you’d use “t: AudioSource”.
 
-## C#
+# C#
 - `#define` You use it to define a symbol. When you use the symbol as the expression that's passed to the `#if` directive, the expression will evaluate to `true`. 
 	- If you use `#if` with a undefined symbol, the symbol will be evaluated to `false`.
 	- You can also undefine a symbol using `#undef`, then the expression will evaluate to `false`.
@@ -53,6 +53,10 @@
 	- Fields are normal variable members of a class. Generally, you should declare your fields as private, then use Properties to get and set their values. By this way you won’t affect their values them directly. This is common case practice since having public members violates the Encapsulation concept in OOP. [ref](https://medium.com/omarelgabrys-blog/properties-vs-fields-in-c-6cec86c59dc9)
 	- They are actually special methods called “accessors”. Properties are called accessors because they offer a way to get and set a field if you have a private field. They have two codes inside; set{}; and get{}; called “property accessors”.
 - `System.Linq` provide `First()`, `Last()` and othe functions for array like data structures like List through Extension methods.
-### Tips
+## xml serializer
+- When you are using xsd generated schema, and in your generated xml file, you cannot find attributes for some element. You probably forget to set the corresponding field to true.
+	- For example, you have field `s`, when you set `s` to a desired value, you also need to set `sSpecified = true`!!!
+
+# Tips
 - You shouldn't drag a real object, you should drag the prefab from `Project`
 - `ctrl`/`cmd` + left arrow to collapse all elements
