@@ -22,3 +22,5 @@
 | `/usr` | Read-only user data; contains the majority of utilities and applications |
 | `/var` | Variable files whose content is expected to change during normal operation |
 
+## Be careful!
+- Don't change default python setting like install another version, it may result in your failing to open terminal.
