@@ -53,6 +53,12 @@
 	- Fields are normal variable members of a class. Generally, you should declare your fields as private, then use Properties to get and set their values. By this way you won’t affect their values them directly. This is common case practice since having public members violates the Encapsulation concept in OOP. [ref](https://medium.com/omarelgabrys-blog/properties-vs-fields-in-c-6cec86c59dc9)
 	- They are actually special methods called “accessors”. Properties are called accessors because they offer a way to get and set a field if you have a private field. They have two codes inside; set{}; and get{}; called “property accessors”.
 - `System.Linq` provide `First()`, `Last()` and othe functions for array like data structures like List through Extension methods.
+## Tips from Martins
+- Delegate is needed when you want to use local variables inside a function.
+- Inside a class, if your function is not depending any other members of the class, make it static.
+	- It will be faster since you don't need to create an object to call it.
+	- It will be easier for people to read your code.
+	- It will be easier later if we want to make this function as a utility function and take it out of the class.
 ## xml serializer
 - When you are using xsd generated schema, and in your generated xml file, you cannot find attributes for some element. You probably forget to set the corresponding field to true.
 	- For example, you have field `s`, when you set `s` to a desired value, you also need to set `sSpecified = true`!!!
