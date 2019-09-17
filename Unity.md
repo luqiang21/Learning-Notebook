@@ -53,6 +53,7 @@
 	- Fields are normal variable members of a class. Generally, you should declare your fields as private, then use Properties to get and set their values. By this way you won’t affect their values them directly. This is common case practice since having public members violates the Encapsulation concept in OOP. [ref](https://medium.com/omarelgabrys-blog/properties-vs-fields-in-c-6cec86c59dc9)
 	- They are actually special methods called “accessors”. Properties are called accessors because they offer a way to get and set a field if you have a private field. They have two codes inside; set{}; and get{}; called “property accessors”.
 - `System.Linq` provide `First()`, `Last()` and othe functions for array like data structures like List through Extension methods.
+
 ## Tips from Martins
 - Delegate is needed when you want to use local variables inside a function.
 - Inside a class, if your function is not depending any other members of the class, make it static.
@@ -63,6 +64,20 @@
 - When you are using xsd generated schema, and in your generated xml file, you cannot find attributes for some element. You probably forget to set the corresponding field to true.
 	- For example, you have field `s`, when you set `s` to a desired value, you also need to set `sSpecified = true`!!!
 
+### Difference between Class and Structure in C#
+| CLASS	| STRUCTURE |
+| --------- | ---- |
+| Classes are of reference types. |	Structs are of value types. |
+| All the reference types are allocated on heap memory.	| All the value types are allocated on stack memory. |
+| Allocation of large reference type is cheaper than allocation of large value type. |	Allocation and de-allocation is cheaper in value type as compare to reference type. |
+| Class has limitless features.	| Struct has limited features. |
+| Class is generally used in large programs.	| Struct are used in small programs. |
+| Classes can contain constructor or destructor. |	Structure does not contain constructor or destructor. |
+| Classes used new keyword for creating instances. | 	Struct can create an instance, without new keyword. |
+| A Class can inherit from another class.	| A Struct is not allowed to inherit from another struct or class. |
+| The data member of a class can be protected. |	The data member of struct can’t be protected. |
+| Function member of the class can be virtual or abstract. |	Function member of the struct cannot be virtual or abstract. |
+| Two variable of class can contain the reference of the same object and any operation on one variable can affect another variable. |	Each variable in struct contains its own copy of data(except in ref and out parameter variable) and any operation on one variable can not effect another variable. |
 # Tips
 - You shouldn't drag a real object, you should drag the prefab from `Project`
 - `ctrl`/`cmd` + left arrow to collapse all elements
