@@ -1,4 +1,7 @@
 # Random tips
+## Life saving tips
+- If you accidentally did `git checkout .` that removed every change you did. You still have the chance to get it back
+	- (From [Martins](https://github.com/martins-mozeiko)) If you didn't close your IDE and your file is still open, just do `ctrl + z`, you can get everything back!!!
 ## General programming
 - Inheritance: if you have same property fields in your derived classes from same base class, and you want to remove these same fields from derived classes and make one in the base class. You can just do it since property fields are accessed by name. The data associated with the fields will be kept if you move them from the derived class to the base class.
 
