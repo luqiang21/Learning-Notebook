@@ -44,6 +44,17 @@
 - Exploration vs Exploitation
     - Exploration 
         - epsilon-greedy: We pick the action with highest Q value but yet we allow a small chance of selecting other random actions
+## Temporal-Difference Methods
+- Whereas Monte Carlo (MC) prediction methods must wait until the end of an episode to update the value function estimate, temporal-difference (TD) methods update the value function after every time step.
+### TD Control
+- Sarsa(0) (or Sarsa) is an on-policy TD control method. It is guaranteed to converge to the optimal action-value function q_*, as long as the step-size parameter \alpha is sufficiently small and \epsilon is chosen to satisfy the Greedy in the Limit with Infinite Exploration (GLIE) conditions.
+- Sarsamax (or Q-Learning) is an off-policy TD control method. It is guaranteed to converge to the optimal action value function q_*, under the same conditions that guarantee convergence of the Sarsa control algorithm.
+- Expected Sarsa is an on-policy TD control method. It is guaranteed to converge to the optimal action value function q_*, under the same conditions that guarantee convergence of Sarsa and Sarsamax.
+#### The differences between these algorithms are summarized below:
+- Sarsa and Expected Sarsa are both on-policy TD control algorithms. In this case, the same (\epsilon-greedy) policy that is evaluated and improved is also used to select actions.
+- Sarsamax is an off-policy method, where the (greedy) policy that is evaluated and improved is different from the (\epsilon-greedy) policy that is used to select actions.
+- On-policy TD control methods (like Expected Sarsa and Sarsa) have better online performance than off-policy TD control methods (like Sarsamax).
+- Expected Sarsa generally achieves better performance than Sarsa.
 
 # Pandas
 
