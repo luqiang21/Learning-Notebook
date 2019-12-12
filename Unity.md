@@ -81,3 +81,18 @@
 # Tips
 - You shouldn't drag a real object, you should drag the prefab from `Project`
 - `ctrl`/`cmd` + left arrow to collapse all elements
+## Rotations
+- convert Quaternion between left-hand and right-hand frames [ref](https://gamedev.stackexchange.com/questions/157946/converting-a-quaternion-in-a-right-to-left-handed-coordinate-system)
+	```
+	A quaternion can be thought of as an angle-axis representation:
+
+	quaternion.xyz = sin(angle/2) * axis.xyz
+	quaternion.w = cos(angle/2)
+	So, converting them between two coordinate systems can be broken down into two steps:
+
+		1. Map the axis into the new coordinate system.
+		2. If changing between left & right hand coordinates (eg. if there's an odd 
+		number of axis negations or axis exchanges between the two), negate the angle.
+
+	Since cos(-angle) = cos(angle) and sin(-angle) = -sin(angle) this is the same as flipping the axis of rotation, negating the x, y, and z parts.
+	```
