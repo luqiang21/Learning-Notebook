@@ -1,5 +1,6 @@
 # Awesome Tools for coding
 - `TabNine` automatic code completion.
+- [tmux settings](https://github.com/gpakosz/.tmux#enabling-the-powerline-look)
 # Awesome Tools on linux 
 - `Kazam` to record videos
 - `Flameshot` to take screenshot and make simple annotations
