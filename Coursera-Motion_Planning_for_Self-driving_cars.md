@@ -76,3 +76,67 @@
 	- $$ \int_{0}^{s_f} || \dddot{x}(s) ||^2 ds$$
 - Curvature
 	- $$ \int_{0}^{s_f} || \kappa (s) ||^2 ds $$
+
+# Week 2
+## Environmental maps
+### Occupancy grid map
+- Assumptions
+	- static environment
+	- Independence of each cell
+	- Known vehicle state at each time step
+- belief map: occupancy grid map stores probability of a cell being occupied due to sensor noise
+- Create occupancy grid map from lidar scan data
+	- Issue with standard bayesian update
+		- $bel_t(m) = n \cdot p(y_t | m) \cdot bel_{t-1}(m)$ 
+		- Multiplication of numbers close to zero is hard for computers
+	- Store the log odds ratio rather than probability
+		- $logit(p) = \frac{p} {1 - p} $
+- Bayesian log odds update 
+	- $l_{t, i} = logit(p(m^i | y_t)) + l_{t-1, i} + l_{0, i}$
+	- $l_{t-1, i} = logit(p(m^i | y_{1:t-1}))$ is the previous belief at $t-1$ for cell $i$
+	- $p(m^i | y_t)$ is the inverse measurement model
+	- $l_{0, i}$ is the initial belief at time 0 for cell $i$
+- Bayesian log odds update has two advantages:
+	- numerically stable
+	- computationally efficient
+#### Inverse measurement model
+- In occupancy grid map, 3 types: no information, low probability, high probability
+- Parameters: $\alpha$ affected range for high probability, $\beta$ affected angles for low and high probability 
+- To increase computation speed, use ray tracing algorithm: Bresenham's line algorithm
+	- Perform update on each beam from the Lidar rather than each cell on the grid
+		- Performs far fewer updates (ingores no information zone)
+		- Much cheaper per rotation
+#### Filtering 3D lidar data
+- Downsampling
+	- E.g. take every 10th point
+- Filter out lidar points above the autonomous car
+- We remove all Lidar points which have hit the drivable surface or ground plane.
+	- Difficult due to several complications
+		- Differing road geometries
+		- Curbs, lane boundaries
+		- Don't want to miss small objects on roads
+	- Take advantages of segmentation to remove points of road elements, keep points from non-drivable surfaces
+- Remove all dynamic objects
+	- Not all vehicles are dynamic, so they should be included.
+	- History of dynamic object location can be used to identify parked vehicle
+	- The dynamic objects are identified from previous lidar frame
+#### Projection of 3D Lidar onto 2D plane
+- Simple solution:
+	- Collapse all points by zeroing the Z coordinate
+	- Sum up the number of lidar points in each grid location
+		- More points indicated greater chance of occupation of that grid cell
+### High-definition road map (lanelet map)
+- lanelet element
+	- Defines the following
+		- left and right boundaries
+		- Regulations
+			- Elements
+			- Attributes
+		- Connectivity to other lanelets
+	- A new lanelet is created when a new regulatory element is encountered or ends
+- Operations done on lanelets
+	- Path planning through complex road networks
+	- Localize dynamic objects
+	- Interactions with other dynamic objects
+
+
