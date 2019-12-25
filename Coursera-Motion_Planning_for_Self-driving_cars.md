@@ -77,7 +77,7 @@
 - Curvature
 	- $$ \int_{0}^{s_f} || \kappa (s) ||^2 ds $$
 
-# Week 2
+# Week 2 Mapping for Planning
 ## Environmental maps
 ### Occupancy grid map
 - Assumptions
@@ -91,6 +91,7 @@
 		- Multiplication of numbers close to zero is hard for computers
 	- Store the log odds ratio rather than probability
 		- $logit(p) = \frac{p} {1 - p} $
+		- Convert logit back to p: $p = \frac{e^{logit(p)}} {1 + e^{logit(p)}}$
 - Bayesian log odds update 
 	- $l_{t, i} = logit(p(m^i | y_t)) + l_{t-1, i} + l_{0, i}$
 	- $l_{t-1, i} = logit(p(m^i | y_{1:t-1}))$ is the previous belief at $t-1$ for cell $i$
@@ -139,4 +140,70 @@
 	- Localize dynamic objects
 	- Interactions with other dynamic objects
 
+
+# Week 3 Mission Planning in Driving Environments
+## Creating a road network graph
+- For an unweighted, directed graph, use BFS to find the shortest path
+- Vertices represent intersections, edges represent road segments
+## Dijkstra's shortest path search
+- For weighted graphs, we need to use dijkstra's algorithm to search shortest path which uses a minHeap to always choose the vertex whose path cost is the lowest.
+## A* Shortest path search
+- Admissible heuristic cost: the cost heuristic should be always less than or equal to the actual cost
+- If we choose the heuristic cost to be 0 everywhere, then A* becomes Dijkstra's algorithm
+- How to apply A* involving time instead of distance
+	- Use lower bound of time of travel by assuming maximum speed over euclidean distance
+
+# Week 4 Dynamic Object Interactions
+## Requirements for motion prediction models
+- Mandatory requirements
+	- class of dynamic objects
+	- current heading, position and velocity
+- Optional requirements
+	- history of the position, heading and velocity
+		- requires object tracking between identifications over a set amount of time
+	- current high-definition map
+## Simplification of motion prediction - cars
+- Physics-based assumptions
+- Maneuver-based assumptions
+- Interactions-aware assumptions
+## Complexities of motion prediction - pedestrians
+- Pedestrians are unpredictable
+- Can rapidly change speed and heading
+- Pedestrians have right of way, but will stop if threatened.
+## Constant velocity prediction issues
+- Don't account for vehicle dynamics fully
+- Don't account for the road (position adjustment)
+- Don't account for road signs (velocity adjustment)
+- Assumptions are too strong and incorrect for most dynamic object motion
+## Map-aware motion prediction
+### Assumptions to improve motion prediction
+- Positional Assumptions
+	- Vehicles on lane usually follow the given drive lane
+	- Changing drive lanes is usually prompted by an indicator signal
+- Velocity Assumptions
+	- Vehicles usually modify their velocity when approaching restrictive geometry (tight turns)
+		- Maximum lateral acceleration
+	- Vehicles usually modify their velocity when approaching regulatory elements
+		- Stop locations, deceleration profile
+		- Lanelet priors	
+- Issues with the assumptions
+	- Difficult to predict lane change without extra information
+	- Difficult to predict for cases when there are multiple possible lanes
+		- Solution
+			- Most likely prediction
+			- Multi-hypothesis prediction
+	- Vehicles don't always stay within their lane or stop at regulatory elements
+	- Vehicles off of the road cannot be predicted using this method
+## Time to collision
+- Time to collision is comprised of 
+	- Collision point between the two dynamic objects
+	- Prediction of the time to arrive to the collision point
+- Requirement for accuracy
+	- Accurate predicted trajectories for all dynamic objects(positions, heading and velocity)
+	- Accurate dynamic object geometries
+### Two ways to compute time to collision: simulation-based and estimation-based
+- Estimation-based approach
+	- Geometries of the vehicle are approximated over duration of the predicted path
+	- Collision point is estimated based the cars' predictions
+![comparison](images/simulation_estimation.png)
 
