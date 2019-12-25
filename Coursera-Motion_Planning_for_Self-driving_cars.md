@@ -192,6 +192,9 @@
 		- Solution
 			- Most likely prediction
 			- Multi-hypothesis prediction
+				- consider the range of all possible motions
+				- provide more information(ambiguous) to local planner
+				- safer due to human error (forgotten turn signal)
 	- Vehicles don't always stay within their lane or stop at regulatory elements
 	- Vehicles off of the road cannot be predicted using this method
 ## Time to collision
@@ -207,3 +210,107 @@
 	- Collision point is estimated based the cars' predictions
 ![comparison](images/simulation_estimation.png)
 
+# Week 5 Principles of Behavior Planning
+## Behavior planning
+- A behavior planning system plans the set of high level driving actions, or maneuvers to safely achieve the driving mission under various situations
+- Behavior planner considers
+	- Rules of the road
+	- Static objects around the vehicle
+	- Dynamic objects around the vehicle
+- Driving maneuvers
+	- Track speed
+	- Follow leader
+	- Decelerate to stop
+	- Stop
+	- Merge
+- Output of Behavior Planner
+	- Driving maneuver to be executed
+	- Set of constraints which must be obeyed by the planned trajectory of the self-driving car which include:
+		- Ideal path
+		- Speed limit
+		- Lane boundaries
+		- Stop locations
+		- Set of interest vehicles
+- Input Requirements
+	- HD map
+	- Mission path
+	- Localization information
+	- #### perception information
+		- All observed dynamic objects
+			- Prediction of future movement
+			- Collision points and time to collision
+		- All observed static objects
+			- Road signs
+		- Occupancy grid
+- Finite state machines
+	- Each state is a driving maneuver
+	- Transitions define movement from one maneuver to another
+	- Transitions define the rule implementation that needs to be met before a transition can occur
+	- Entry action are modifications to the conditions
+	- #### Advantages
+		- Limiting number of rule checks
+		- Rule become more targeted and simple
+		- Implementation of the behavior planner becomes simpler
+## Behavior planning testing
+- Code based tests
+	- To confirm the logic of the code is correct
+- Simulation tests
+	- Inside simulator, check whether the state machine performs the scenarios which it was designed to handle.
+	- This type of testing is able to confirm if the state machine transitions and state coverage are correct.
+	- The number of tests performed in the simulation should be representative of all possible situations which can be seen when driving the scenario to catch any edge cases which programmers might have missed.
+		- Many times selecting a representative set of tests is not trivial, especially as the complexity of the scenarios increases.
+- Private track tests
+	- This type of testing tests specific scenarios which are hard to confirm exactly in simulation, such as parameter tuning and noise, and errors in the perception output in a real environment. 
+- Limited scope close supervision road tests
+### Dynamic Object Edge Cases not handled
+- Assumption
+	- All dynamic obstacles obey rules of the traffic
+- Not always the case.
+
+## Handling multiple scenarios
+- Single state machine
+	- Add transitions
+	- Add additional transition conditions
+	- Issues
+		- Rule explosion
+		- Increase in computational time
+		- Complicated to create and maintain
+- Multiple state machines
+	- Use a super state to represent a scenario, also known as Hierachical State Machine
+	- Introduce entry and exit transitions to transit among super states
+	- Advantages
+		- Decrease in computational time
+		- Simpler to create and maintain
+	- Disadvantages
+		- Rule Explosion
+			- still unable to handle rule explosion completely.
+		- Repetition of many rules in the low level state machines 
+## Advanced methods for behavior planning
+- State machine behavior planning issues
+	- Rule-explosion when dealing with complex scenarios
+	- Dealing with a noisy environment
+	- Hyperparameter tuning
+	- Incapable of deadling with unencountered scenarios
+- Rule-based behavior planner
+	- Hierarchy of rules
+		- Safety critical
+		- Defensive driving
+		- Ride comfort
+		- Nominal behaviors
+	- Reduced need for duplication
+		- Rules can apply throughout the ODD (what is this?)
+	- Suffer from same challenges as finite state machines
+		- Common to all expert system designs
+- Fuzzy logic
+	- While Fuzzy based rule systems are able to deal with the environmental noise of a system to a greater degree than traditional discreet systems. Both rule-explosion and hyperparameter tuning remain issues with Fuzzy systems.
+- Reinforcement Learning
+	- Hierarchical RL
+	- Model-based RL
+	- Issues
+		- Simple simulation environments
+			- Many simulation environments used to learn the policies required for autonomous driving are overly simplified. And due to their simplicity the policies learned may not be transferable to real world environments. Overly realistic simulators lead to the issue of severe computational requirements. Especially when running thousands of repetitions of widely varying scenarios for self driving learning.
+		- Ensuring safety
+			- There is still no way to perform rigorous safety assessment of a learned system, as they are mostly black boxes in terms of the way in which decisions are made. 
+- Inverse Reinforcement Learning
+	- Get reward function from human-driving data
+- End-to-End approaches: raw sensor data -> throttle, steering 
