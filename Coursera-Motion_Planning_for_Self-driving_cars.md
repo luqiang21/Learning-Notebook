@@ -365,7 +365,7 @@ $$\mathcal{S} = U_{p \in P}F(x(p), y(p), \theta(p)) $$
 #### Receding horizon planner example
 - Only 1s of 2s trajectory is executed at each planning iteration
 - Planning horizon end time recedes towards time point at which the goal is reached
-#### The planner is greedy and sum-optimal, but is fast enough to allow for online planning, short-sighted.
+#### The planner is greedy and sub-optimal, but is fast enough to allow for online planning, short-sighted.
 ## Dynamic Windowing
 > Dynamic windowing will allow us to place linear and angular acceleration constraints on the vehicle's trajectory, in order to promote comfort as the vehicle progresses between planning cycles.
 ### Constraint in terms of steering angle
@@ -375,3 +375,76 @@ $$\mathcal{S} = U_{p \in P}F(x(p), y(p), \theta(p)) $$
 $$ \dot{\theta} = \frac{v\cdot tan(\delta)} {L}$$
 $$ |\ddot{\theta}| = \left| \frac{\dot{\theta_2} - \dot{\theta_1}} {\Delta t} \right| $$
 $$ |tan(\delta_2) - tan(\delta_1)| \le \frac{\ddot{\theta}_{max}\cdot L \cdot \Delta t} {v} $$
+
+# Week 7 Smooth Local Planning
+## Parametric curves
+- The first step in understanding the path planning problem is to first understand its most fundamental requirements. 
+	- For the path planning problem, this is given a starting position, heading, and curvature, find a path to an ending position heading and curvature that satisfies our kinematic constraints. 
+	- In the context of an optimization, the starting and end values can be formulated as the boundary conditions of the problem, and the kinematic motion of the vehicle can be formulated as continuous time constraints on the optimization variables. 
+	- In this context, the boundary conditions are the conditions that must hold on either end point of the path for a given optimization solution to be considered feasible. If these boundary conditions are violated, no matter how great the path is, we haven't achieved our core objective of actually getting to the point we want to get to. So the path is not useful to us. 
+	- These boundary conditions will influence how we decide to set up the underlying structure of the optimization problem. 
+- #### Kinematic Constraints
+	- Maximum curvature along path cannot be exceeded
+	- Ensures that car can drive along path
+- #### Parametric curves
+	- Parametric curve $r$ can be described by a set of parameterized equations
+	- Parameter denotes path traversal, can be arc length or unitless
+- Path optimization
+	- Want to optimize path according to cost function $f$
+	- Parametric curves allow for optimizing over parameter space, which simplifies optimization formulation
+
+min $f(r(u))\ s.t.$ 
+$$c(r(u)) \le \alpha, \forall u \in [0, 1]$$ 
+$$r(0) = \beta_0$$ 
+$$r(u_f) = \beta_f $$
+- Non-parametric path
+	- Reactive planner used non-parametric paths underlying each trajectory
+		- Path was represented as a sequence of points rather than parameterized curves
+- Two common types of path parameterizations
+	- Quintic splines
+		- $x$ and $y$ are defined by $5th$ order splines
+		- Closed form solution available for $(x, y, \theta, k)$ boundary conditions
+		- Chanllenging to constrain curvature due to the nature of spline's curvature
+			- pontential discontinuities in curvature or its derivatives
+			- $\kappa (u) = \frac{x'(u) y''(u) - y'(u) x''(u)} {(x'(u)^2 + y'(u)^2)^{\frac{3}{2}}}$
+	- Polynomial spirals
+		- Spirals are defined by their curvature as a function of arc length
+		- Closed form curvature definition allows for simple curvature constraint checking
+			- Curvature is well-behaved between sampled point as well due to polynomial formulation
+		- Downsides
+			- Spiral position does not have a closed form solution
+			- Fresnel integrals need to evaluated numerically, this can be done using Simpson's rule
+	> The spline provides closed form solutions based on start and end points alone, whereas the spiral does not. The spiral ensures smooth curvature variation along the path, while the spline does not. You will therefore need to determine which method is appropriate depending on your specific application. As a brief shorthand, the spline leads to computational efficiency, while the spiral leads to easier implementation of curvature constraints. 
+## Path planning optimization
+- Cubic spiral and boundary conditions
+	- Boundary conditions specify starting state and required ending state
+	- Spiral end position lacks closed form solution, requires numerical approximation
+	- start: $(x_0, y_0, \theta_0, \kappa_0)$, end: $(x_f, y_f, \theta_f, \kappa_f)$
+	- $\kappa(s) = a_3 s^3 + a_2 s^2 + a_1 s + a_0$
+	- $x(s) = x_0 + \int_0^s cos(\theta(s')) ds' $
+	- $y(s) = y_0 + \int_0^s sin(\theta(s')) ds' $ 
+- Position integrals and simpson's rule
+	- Simpson's rule has improved accuracy over other methods
+		- it evaluates the integral of the quadratic interpolation of the given function rather than the integral of the linear interpolation as in some methods such as midpoint and trapezoidal rules. Simpson's rule proceeds by defining a number of equally spaced divisions of the integration domain defined by n, and then summing terms at each division and boundary point.
+	- Divides the integration into $n$ regions and evaluates the function at each region boundary
+![Applying Simpson's Rule](images/simpson_rule.png)
+- Boundary conditions via Simpson's Rule
+	- Using our Simpson's approximations, we can now write out the full boundary conditions in terms of spiral parameters
+	- Can now generate a spiral that satisfies boundary conditions by optimizing its spiral parameters and its length, $s_f$
+- Approximate curvature constraints
+	- Want to apply curvature constraints to path so it is drivable by the vehicle
+	- Curvature constraints correspond to minimum vehicle turning radius
+	- Can constrain sampled points along the path due to well-behaved nature of spiral's curvature
+- #### Bending Energy Objective
+$$ f_{be}(a_0, a_1, a_2, a_3, s_f) = \int_0^{s_f} (a_3s^3 + a_2s^2 + a_1s + a_0)^2 ds$$
+	- Bending energy distributes curvature evenly along spiral to promote comfort
+		- Equals to integral of square curvature along path, which has closed form for spirals
+	- Gradient also has a closed form solution
+		- Has many terms, it is best to left to symbolic solver
+![Initial Optimization Problem](images/initial_optimization_problem.png)
+- Because equality constraints must be satisfied exactly, it is quite hard for a numerical optimizer to generate a feasible solution from an infeasible starting point which is often what is given to the optimizer for an arbitrary problem instance. To alleviate this issue, it is common in optimization to soft inequality constraints to improve optimizer performance.
+![Soft constraints](images/soft_constraints.png)
+- Parameter remapping to expedite convergence
+![Parameter Remapping](images/parameter_remapping.png)
+
+![Final form](images/final_formulation.png)
