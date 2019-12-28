@@ -448,3 +448,56 @@ $$ f_{be}(a_0, a_1, a_2, a_3, s_f) = \int_0^{s_f} (a_3s^3 + a_2s^2 + a_1s + a_0)
 ![Parameter Remapping](images/parameter_remapping.png)
 
 ![Final form](images/final_formulation.png)
+## Conforming Lattice Planning
+- Conformal Lattice
+	- Goal is to plan a feasible collision-free path to goal
+	- Conformal lattice exploits road structure to speed up planning
+	- Lattice paths are laterally offset from a goal point along road
+- Goal Horizon
+	- Short lookahead improves computation time, but reduces ability to avoid obstacles
+	- Goal point is dynamically calculated based on speed and other factors
+	- Endpoints are sampled laterally offset from goal according to the heading along the road
+- Generating spirals
+	- Can then compute cubic spirals to each goal point
+	- Focus on kinematic feasibility for now, collision-checking comes later
+	- If a goal point cannot be reached with a spiral under the kinematic constraints, discard the goal point
+- Getting spiral parameters
+	- Convert optimization variables back into spiral parameters
+	- Can then use spiral coefficients to sample points along the spiral
+- Trapezoidal Rule Integration
+	- Use numerical integration to generate positions along path
+	- Trapezoidal rule is faster for generating entire path than Simpson's rule
+	- Discrete representation generated using `cumulative_trapezoid()` function in python
+	- The trapezoid rule is significantly more efficient than Simpson's rule in this context, because each subsequent point along the curve, can be constructed from the previous one. So we only have to do one sweep through the spiral to get all of the required points. Simpson's rule, on the other hand, would require us to solve an integral approximation for each point, which is much less efficient. 
+- Generated path set
+	- For each of our goal states, we can optimize a spiral to the goal point
+	- Using trapezoidal numerical integration we get a discrete path representation
+	- Now need to see which are collision-free
+		- Can do this through circle-based or swath-based collision checking for each point along each path
+- Path selection
+	- Need to select best path among collision-free paths
+	- Objective function for selection is a design choice
+	- Can reward paths that track the center of the road, and penalize paths that come too close to obstacles
+- Get full path
+	- Repeat above process for each planning step as car moves along road
+	- Path will converge to the centerline of the road, even when obstacles are present
+## Velocity Profile Generation
+- Behavioural planner reference velocity
+	- Need to compute reference velocity
+	- Can use the speed limit as a starting point
+	- Behavioural planner maneuver will also influence reference velocity
+- Dynamic obstacles
+	- Lead dynamic obstacles regulate our speed to prevent collisions
+	- Time to collision is an important metric to preserve when driving with lead vehicles
+- Curvature and Lateral Acceleration
+	- Curvature recorded at intermediate points, $\kappa_i$
+	- Velocity bounded by maximum lateral acceleration from comfort rectangle
+	- $v_k \le \sqrt{\frac{a_{lat}} {\kappa_i}}$ 
+	- Final velocity selected as the minimum of behavioural planner reference velocity, lead velocity speed and curvature speed limit
+- Linear ramp: Given $v_0$ and $v_f$ and arc length $s$, compute $a$, then compute speed at every time step
+- Trapezoidal profile
+	- car decelerates to slower speed before stopping
+		- Useful for stop sign scenarios
+	- Deceleration chosen to be well within comfort rectangle to maximize passenger comfort
+![Trapezoidal Profile](images/trapezoidal_profile.png)
+
