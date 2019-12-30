@@ -1,3 +1,5 @@
+Path planning is based on two major elements: behavior prediction of maneuverable objects and behavior planning for the vehicle itself.
+
 # Week 1
 ## On road scenarios
 - Road structure scenarios
