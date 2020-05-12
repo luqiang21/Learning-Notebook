@@ -1,0 +1,796 @@
+# Udacity Course: Introduction to Computer Vision (Prof. Aaron F. Bobick)
+
+## Convolution vs Correlation
+- Correlation moves filter straight, convolution flips 180 degree.
+- They are the same when the filter is symmetric
+## Filters
+- Median filter
+	- Remove salt and pepper noise
+	- Preserve edges while mean filter doesn't
+	- Non linear filter
+- Filter as template
+	- normalize correlation to find pattern inside an image, like detecting something
+## Edge detection: Gradients
+- In real image types of edges: 
+	- Reflectance change: appearance information, texture
+	- Depth: discontinuity, object boundary
+	- Cast shows
+	- Discontinous change in surface orientation
+- Note: stripe on a sign is not due to shape or illumination, it is color discontinuity.
+- Derivatives and edges: An edge is a place of rapid change in the image intensity function.
+- The gradient points in the direction of most rapid increase in intensity. $\Delta f = [\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}]$
+- #### Sobel detector
+	- $sx$ 1/8 * $\begin{pmatrix}
+		       -1 & 0 & 1\\
+		       -2 & 0 & 2\\
+ 		        -1 & 0 & 1
+			\end{pmatrix}$
+	- $sy$ 1/8 * $\begin{pmatrix}
+		       1 & 2 & 1\\
+		       0 & 0 & 0\\
+ 		        -1 & -2 & -1
+			\end{pmatrix}$ here y is up 	
+- It is better to compute gradients using correlation since it preserves the intended directionality of gradients.
+- For real world images with noise, we need to smooth first before finding edges. Otherwise, there will be lots of high value gradients due to noise.
+- #### Canny Edge detector
+	- Primary edge detection steps
+		- Smoothing derivatives to suppress noise and compute gradient
+		- Threshold to find regions of "significant" gradient
+		- "Thin" to get localized edge pixels
+		- Add link or connect edge pixels
+	- Canny edge detector
+		- Filter image with derivative of Gaussian
+		- Find magnitude and orientation of gradients
+		- Non-maximum suppression
+			- Thin multi-pixel wide "ridges" down to single pixel width
+		- Linking and thresholding (hysteresis)
+			- define two thresholds: low and high
+			- Use the high threshold to start edge curves and the low threshold to continue them.
+## Hough Transform
+- Rough idea
+	- Each edge point votes for compatible lines
+	- Look for lines that get many votes
+- Image space -> Hough (parameter) space
+	- A line in the image corresponds to a point in hough space
+	- A point in the image corresponds to a line in hough space
+- Algorithm
+	- Let each edge point in image space vote for a set of possible parameters in Hough space
+	- Accumulate votes in discrete set of bins; parameters with the most votes indicate line in image space
+- Use polar representation to avoid undefined parameters for vertical lines. $\ro = x cos(\theta) + y sin(\theta)$
+- Complexity of the Hough transform
+	- Space: $k^n$ (n dimensions, k bins each)
+	- Time
+- Hough Transform: Circles
+	- $(x-a)^2 + (y-a)^2 = r^2$
+	- With known r, a point on a circle in x-y space is a circle in a-b space.
+	- With unknown r, a point on a circle in x-y space, is a cone in a-b-r 3d space.
+	- Pros:
+		- All points are processed independently, so can cope with occulsion
+		- Some robustness to noise: noise points unlikely to contribute consistently to any single bin
+		-  Can detect multiple instances of a model in a single pass.
+	- Cons:
+		- Complexity of search time increases exponentially with the number of model parameters
+		- Non-target shapes can produce spurious peaks in parameter space
+		- Quantization: hard to pick a good grid size
+- Generalized Hough Transform
+	- Non-analytical models
+	- Visual code-word based features
+## Fourier Transform (spatial domain -> frequency domain (w or u or even s)
+- Any periodic function can be rewritten as a weighted sum of sines and cosines of different frequencies.
+- Usually, frequency magnitude is more interesting than the phase for CV because we are not reconstructing the image.
+- Formal definition of FT
+	- Represent the signal as an infinite weighted sum of an infinite number of sinusoids
+	- $F(u) = \int^\infty_{-\infty} f(x) e^(-2i\pi ux) dx$
+	- $e^{ik} = cos k + isin k, i = \sqrt{-1}$
+	- $F(u)$ exists if the function is integrable: $ \int^\infty_{-\infty} |f(x)| dx < \infty$
+	- Discrete FT:
+		- $F(k) = \frac{1}{N} \sum^{x=N-1}_{x=0} f(x) e^{-i \frac{2\pi k x}{N}}$
+		- $x$ is discrete and goes from the start of the signal to the end $(N-1)$
+		- $k$ is the number of "cycles per period of the signal" or "cycles per image"
+- Spatial domain: convolution <--> Frequency domain: multiplication, vice versa
+## Camera and images
+- Pinhole camera model
+	- Aperture for pinhole camera
+		- Too small will have diffraction
+		- Too large will have too much light, get a blurred image
+- Thin Lense model
+	- $1/||z'|| + 1/||z|| = 1/f$
+- Depth of field
+	- Large aperture -> short depth of field
+	- Small aperture -> large depth of field
+- Field of view
+	- $\phi = tan^{-1}(\frac{d/2}{f})$, d is the "retina" or sensor size, f focal length
+	- Larger focal length -> smaller FOV
+## Perspective Imaging
+- Modeling projection
+	- $(X, Y, Z) -> (-d\frac{X}{Z}, -d\frac{Y}{Z}, -d}$
+	- When X and Z are very large, the image doesn't change when X and Z change.
+- Homoegeneous Coorindates
+	- 2D (x, y) -> (x, y, 1), 3D (x, y, z, 1)
+	- Convert back (x, y, w) -> (x/w, y/w)
+	- Persepective Projection
+		```python
+		A = [[1 0 0 0],
+		       [0 1 0 0],
+		       [0 0 1/f 0]]
+		X = [x y z 1]^T
+		b = [x y z/f]
+		AX = b
+		b -> (f*x/z, f*y/z) -> (u, v)
+		```
+- Geometric Properties of Projection
+	- Points go to points
+	- Lines go to lines
+	- Polygons go to polygons
+- Vanishing points
+	- Sets of parallel lines on the same plane lead to collinear vanishing points
+		- The line is called the horizon for that plane.
+- Special case of perspective projection
+	- Orthographic: also called parallel projection
+		- (x, y, z) -> (x, y)
+	- Weak perspective
+		- Perspective effects, but not over the scale of individual objects since the object is far away from the camera, we can neglect the difference of z for different parts of the object
+		- (x, y, z) -> (fx/z0, fy/z0)
+## 3B-L1 Stereo geometry
+- Why multiple views?
+	- Structure and depth are inherently ambiguous from single views
+- Depth and shape cues:
+	- Shadows, texture (orientation recover), focus/blur (take several images with different camera parameters), parallel/converging lines, lighting/shading, occlusion, size/scale, depth from moving object in the image
+- Stereo photography and stereo viewers
+	- Take two pictures of the same subject from two slightly different viewpoints and display so that each eye sees only one of the images.
+- Human binocular fusion, is not based upon matching large-scale structures, or any individual process of the image, is actually based on the low level process that directly fuses the two images.
+- **Estimating depth with stereo**
+	- Stereo: shape from "motion" between two views
+	- We'll need to consider
+		- Info on camera pose ("calibration")
+		- Image point correspondences
+	- If disparity is 0, that means Z is infinity. Disparity is inversely proportional to depth.
+## 3B-L2 Epipolar geometry
+- Stereo correspondence constraints
+	- In perspective projection, lines project into lines.
+	- The line containing the center of projection and the point P in the left image must project to a line in the right image.
+	- Epipolar constraint:
+		- Geometry of two views constrain where the corresponding pixel for some image point in the first view must occur in the second view.
+		- Baseline: line joining the camera centers
+		- Epipolar plane: plane containing baseline and world point
+		- Epipolar line: intersection of epipolar plane with the image plane - come in pairs
+		- Epipole: point of intersection of baseline with image plane
+		- All epipolar lines converge to epipole. 
+			- Special: for parallel image planes, epipole is at infinity. Epipolar lines are parallel.
+	- Epipolar constraint reduces the correspondence problem to a 1D search along an epipolar line
+## 3B-L3 Stereo correspondence
+- Epipolar constraint doesn't solve the correspondence problem and is the hard constraint. Beyond it, we have "soft" constraints to help
+	- Similarity
+	- Uniqueness
+		- No more than one match in right image for every point in left image due to Occlusion.
+	- Ordering
+		- won't hold for transparent object or a narrow occluding surface.
+	- Disparity gradient is limited
+- Dense correspondence search
+	- For each pixel / window in the left image
+		- compare with every pixel/window on same epipolar line in right image
+		- pick position with minimum match cost (e.g. dissimilarity: SSD (sum of squared differences), similarity: normalized correlation)
+- Better solutions
+	- Beyond individual correspondences to estimate disparities
+		- Optimize correspondence assignments jointly
+			- scanline at a time (DP)
+				- generates streaking artifacts since it doesn't consider previous line's result
+				- can't use dynamic programming to find spatially coherent disparities/correspondence on a 2D grid
+			- full 2D grid (graph cuts)
+				- Stereo matching as energy minimization
+					- Data term and smoothness term
+- What defines a good stereo correspondence?
+	- Match quality: want each pixel to find a good correspondence match in the other image
+	- Smoothness: of two pixels are adjacent, they should (usually) move about the same amount
+- Challenges
+	- Low-contrast; textureless image regions
+	- Occlusions
+	- Violations of brightness constancy (e.g., specular reflections)
+	- Really large baselines (foreshortening and appearance change)
+	- Camera calibration errors
+## 3C-L1 Extrinsic camera parameters
+- We need the relationship between coordinates in world and coordinates in camera: geometric camera calibration 
+	- Composed of 2 tranformations
+		- from some (arbitrary) world coordinate system to the camera's 3D coordinate system. Extrinsic parameters (camera pose)
+		- from the 3D coodinates in the camera frame to the 2D image plane via projection. Intrinsic parameters.
+- $^B P = ^B_A R ^A P + ^B O_A$
+## 3C-L2 Intrinsic camera parameters
+- Real intrinsic parameters
+	- focal length is in "mm", but "Pixels" are in some arbitrary spatial units
+	- Maybe pixels are not square (scale factor: $\alpha, \beta$)
+	- We don't know the origin of our camera pixel coordinates (u0, v0)
+	- Maybe skew between camera pixel axes
+	- 5 DOF: focal length and aspect (f, a) [or pixel size (sx, sy)], principle points (x'c, y'c), and skew (s)
+- Whole projection equation:
+	- M = intrinsic * projection * rotation * translation
+	- DOF: 5 + 0 + 3 + 3 = 11
+- The camera matrix does not account for lens distortion because an ideal pinhole camera does not have a lens. To accurately represent a real camera, the camera model includes the radial and tangential lens distortion. 
+- Tangential, p1, p2
+	- Tangential distortion occurs when the lens and the image plane are not parallel. The tangential distortion coefficients model this type of distortion.
+- Radial, k1, k2, k3
+	- Radial distortion occurs when light rays bend more near the edges of a lens than they do at its optical center. The smaller the lens, the greater the distortion.
+## 3C-L3 Calibrating cameras
+- Calibration using known points
+	- Place a known object in the scene
+		- Identify correspondence between image and scene
+		- compute mapping from scene to image
+- Resectioning
+	- Estimating the camera matrix from known 3D points
+- Direct linear calibration - homogeneous
+	- since m is only defined up to scale, solve for unit vector m*
+		- solution: m* = eigenvector of $A^TA$ with smallest eigenvalues
+		- works with 6 or more points, because every point has 2 equations, we have 11 unknowns.
+- SVD (singular value decomposition)
+	- A = UDV^T (D diagonal, U and V orthogonal)
+- "Gold standard" algorithm (Hartley and Zisserman)
+	- Linear Solution
+		- optional: normalization
+		- direct linear transformation minimization
+	- Minimize geometric error: using the linear estimate as a starting point minimize the geometric error.
+- Finding the 3D camera center from M
+	- The center C is the null-space camera of projection matrix. So if find C such that: MC = 0, that will be the center.
+	- M = [Q|b], $C = (-Q^{-1} b  1)^T$
+- Multi-plane calibration using checkboard.
+	- only requires a plane
+	- don't have to know positions/orientations
+	- good code available online
+## 3D-L1 Image to image projections
+- Special projective tranformations
+	- Translation
+		- preserves: lengths/areas, angles, orientation, lines
+	- Rotation
+		- preserves: lengths/areas, angles, lines
+	- Similarity (trans, rot, scale)
+		- preserves: angles, lines, scale lengths/areas
+		- 4 DOF, 1 rotation, 1 scale, 2 translation
+	- Affine transform
+		- preserves: parallel lines, ratio of areas, lines
+		- 6 DOF
+- General projective transform (or Homography)
+	- 8 DOF
+	- Preserves: lines, also cross ratios
+## 3D-L2 Homographies and mosaics
+- The projective plan
+	- What is the geometric intuition of using homogeneous coordinates
+		- A point in the image is a ray in projective space
+		- Each point (x, y) on the plane (at z=1) is represented by a ray ( sx, sy, s)
+- Image reprojection
+	- Rather than thinking of this as 3D reproduction, think of it as a 2D image warp from one image (plane) to another (plane).
+	- Application: image mosaic (panorama)
+		- Basic procedure
+			- Take a sequence of images from the same position
+				- Rotate the camera about its optical center
+			- Compute transformation between second image and first
+			- Transform the second image to overlap with the first
+			- Blend the two together to create a mosaic
+			- Repeat for more images
+	- Mapping between planes is a homography
+	- Whether a plane in the world to the image or between image planes 
+- Image rectification
+	- Measurements on planes
+		- Approach: unwarp then measure
+	- If there is a planar rectangular grid in the scene you can map it into a rectangular grid in the image
+- Forward warping
+	- Send each pixel f(x,y) to its corresponding location (x', y') = T(x,y) in the second image
+	- What if the new location is between pixels? 
+- Inverse warping (correct way)
+	- For locations between pixels, use bilinear interpolation
+## 3D-L3 Projective geometry
+- Point and Line Duality
+	- A line in image is a plane of rays through origin defined by the normal $l = (a, b, c)$, all rays $(x, y, z)$ satisfying $ax + by + cz = 0$.
+	- A line is also represented as a homogeneous 3-vector. Like a point.
+	- A line l is perpendicular to every point(ray) p on the line: $l^T p = 0$.
+	- Points and lines are dual in projective space
+		- Given any formula, can switch the meaning of points and lines to get another formula
+	- To get intersection point and a line connecting two points, just use cross product.
+- Ideal points and lines
+	- Ideal point, p (x, y, 0) - parallel to image plane, has infinite image coordinates
+	- Ideal line, l (a, b, 0) - normal is parallel to image plane 
+		- corresponds to a line in the image (finite coordinates) goes through the image origin (principle point)
+- 3D projective geometry
+	- Duality
+		- A plane N is also represented by a 4-vector N = (a,b,c,d)
+		- Points and planes are dual in 3D: $N^T p = 0$
+## 3D-L4 Essential matrix
+- Use two calibrated cameras
+- From geometry to algebra to help implementation on computers
+- $X'^T E X = 0$, E is the essential matrix, X' and X are world coordinates in two cameras
+## 3D-L5 Fundamental matrix
+- Weak calibration
+	- Estimate epipolar geometry from a (redundant) set of point correspondences between two uncalibrated cameras
+	- $p_{im} = K_{int} \Phi_{ext} P_{w}$ ----> $p_{im} = K_{int} p_c$
+	- $p_c = K_{int}^{-1} p_{im}$ gives us the ray the image point corresponds to
+	- $(K^{-1}_{int, right} p_{im, right})^T E (K^{-1}_{int, left} p_{im, left}) = 0 $
+	- $p^T_{im, right} (K^{-1}_{int, right}^T E (K^{-1}_{int, left}) p_{im, left}) = 0 $
+	- $p^T_{im, right} F p_{im, left} = 0$ F: fundamental matrix
+	- simplified $p^T F p' = 0$
+- Properties of F
+	- $p^T l = 0$ -> $l = Fp'$ is the epipolar line in the p image associated with p'
+	- $l' = F^T p$ is the epipolar line in the prime image associated with p
+- Epipoles can be found by $Fp' = 0$ and $F^Tp = 0$.
+- F is singular (mapping from homogeneous 2D point to 1D family so rank is 2
+- Fundamental matrix
+	- Relates pixel coordinates in two views
+	- More general form than essential matrix
+		- Remove the need to know intrinsics
+- Compute F from correspondences
+	- One correspondence, one equation
+- $F = UDV^T$
+- Set last singular value to zero in D, $\^F = U \^D V^T$
+- Stereo image rectification
+	- Reproject image planes onto a common plane parallel to the line between the optical centers
+	- Pixel motion is horizontal after this transformation
+- For 2-views, there is a geometric relationship that defines the relation between rays in one view and rays in the other - epipolar geometry
+	- there relationships can be captured algebraically as well
+		- calibrated: essential matrix
+		- uncalibrated: fundamental matrix
+	- This relation can be estimated by point corresondence
+## 4A-L1 Introduction to "features"
+- We want local features
+	- Goal: find points in an image that can be 
+		- found in other images
+		- found precisely - well localized
+		- found reliably - well matched
+	- Why?
+		- Want to compute fundamental matrix to recover geometry
+		- robotics/vision: see how a bunch of points move from one frame to another, allows computation of how camera moved -> depth -> moving objects
+		- Build a panorama
+- Matching with featuress
+	- Detect features (feature points) in both images
+	- Match features - find corresponding pairs
+	- Use these pairs to align images
+- Problems
+	- We need a repeatable detector
+	- We need a reliable and distinctive descriptor
+- What makes a good feature
+	- Repeatability/Precision
+		- The same feature can be found in several images despite geometric and photometric transformations
+	- Saliency/Matchability
+		- Each feature has a distinctive descriptor
+	- Compactness and efficiency
+		- Many fewer features than image pixels
+	- Locality
+		- A feature occupies a relatively small area of the image; robust to clutter and occlusion
+## 4A-L2 Finding corners
+- Basic idea
+	- "flat" region: no change in all directions
+	- "edge": no change along the edge direction
+	- "corner": significant change in all directions with small shift
+- Harris Corners
+	- Change in appearance for the shift [u, v]
+		- $E(u, v) = \sum_{x,y} w(x,y) [I(x+u, y+v) - I(x,y)]^2$
+	- We want to find out how this function behaves for small shifts (u, v near 0, 0)
+	- Second-order Taylor expansion of E(u,v) about (0,0) (local quadratic approximation for small u, v)
+	- Second moment matrix M
+	- $E(u,v) = [u v] M [u v]^T$
+	- Diagonalization: $M = R^{-1} \begin{pmatrix} \lambda_1 & 0 \\ 0 & \lambda_2 \end{pmatrix} R$
+		- The axis length of the ellipse are determined by the eignevalues and the orientation is determined by $R$.
+		- The eigenvalues are cornerness 
+	- Harris corner response function $R = det(M) - \alpha trace(M)^2 = \lambda_1 \lambda_2 - \alpha (\lambda_1 + \lambda_2)^2$
+		- R < 0, edge
+		- R > 0, corner
+		- |R| is small, flat region
+- Harris corner detector algorithm
+	- Compute gaussian derivatives at each pixel
+	- Compute second moment matrix M in a gaussian window around each pixel
+	- Compute corner response function R
+	- Threshold R
+	- Final local maxima of response function (non-maximum suppression)
+## 4A-L3 Scale Invariance
+- Harris detector properties
+	- Rotation invariant
+	- Mostly invariant to additive and multiplicative intensity changes (threshold issue for multiplicative)
+	- Not invariant to image scale!
+- Scale invariant detection solution
+	- Design a function on the region (circle), which is "scale invariant" - not affected by the size but will be the same for "corresponding regions", even if they are different size/scales.
+	- One method:
+		- at a point, compute the scale invariant function over different size neighborhoods (different scales)
+		- choose the scale for each image at which the function is a maximum
+	- A "good" function for scale detection: has one stable sharp peak, for usual images, a good function would be a one which responds to contrast (sharp local intensity change)
+		- Function is just application of a kernel: f = Kernel * Image
+			- Laplacian of Gaussian - LOG
+			- Difference of Gaussians - DOG
+			- both are invariant to scale and rotation
+- Key point localization
+	- Find robust extremum (maximum or minimum) both in space and in scale.
+	- SIFT: Scale Invariant Feature Transformation
+	- Specific suggestions: use DOG pyramid to find maximum values, then eliminates "edges" and pick only corners.
+	- SIFT (Lowe): find local maximum of difference of gaussian in space and scale.
+	- Harris-Laplacian: 
+		- Find local maximum of
+			- Harris corner detector in space (image coordinates)
+			- Laplacian in scale
+## 4B-L1 SIFT descriptor
+- Criteria for point descriptors
+	- invariant
+	- distinctive
+- Why can't we use harris detector and compare one by one using correlation
+	- Correlation is not rotation invariant
+	- Correlation is sensitive to photometric changes
+	- Normalized correlation is sensitive to non-linear photometric changes and even slight geometric ones.
+	- Could be slow - check all features against all features
+- Idea of SIFT: image content is represented by a constellation of local features that are invariant to translation, rotation, scale, and other imaging parameters
+- Overall SIFT procedure
+	- Scale-space extreme detection
+	- Keypoint localization
+	- Orientation assignment
+	- Keypoint description
+## 4B-L2 Matching feature points 
+- Nearest-neighbor matching to feature database
+	- SIFT uses best-bin-first modification to k-d tree algorithm
+	- Use heap data structure to identify bins in order by their distance from query point
+- Wavelet-based hashing
+	- Compute a short (3-vector) descriptor from the neighborhood using a Haar "wavelet"
+- Locality sensitive hashing
+- 3D object recognition
+	- Train
+		- extract outlines with background subtraction
+		- compute "keypoints" interest points and descriptors
+	- Test
+		- Find possible matches
+		- Search for consistent solution, such as affine (needs 3 points to solve)
+	- Affine only need 3 points, can get recognition even with occlusion
+## 4C-L1 Robust error functions
+- Feature-based alignment to find transforms
+	- Overall strategy
+		- Compute features - detect and describe
+		- Find useful matches: kd-tree, best-bin, hashing
+		- Compute and apply the best transformation, e.g. affine, translation, homography
+	- Algorithm
+		- Extract features
+		- Compute putative matches e.g. closest descriptor
+		- Loop until happy
+			- Hypothesize transformation T from some matches
+			- Verify transformation (search for other matches consistent with T) - mark best
+- A better match way (Lowe, 1999)
+	- 1-NN (nearest neighbor): SSD (sum of squared difference) of the closest match
+	- 2-NN: SDD of the second closest match
+	- Look at how much better 1-NN is than 2-NN, e.g. 1-NN/2-NN
+- Problem with typical "vertical" least squares which compute difference for y
+	- Not rotation-invariant
+	- Fails completely for vertical lines
+- Total least squares
+	- Distance between point $(x_i, y_i)$ and line $ax + by = d$
+	- Find $(a, b, d) to minimize the sum of squared perpendicular distances
+- Least squares as likelihood maximization
+	- Generative model
+		- line points are corrupted by Gaussian noise in the direction perpendicular to the line
+	- Non-robust to (very) non-gaussian noise
+		- because squared error heavily penalize outliers
+	- Solution:
+		- Robust estimator
+			- $\rho (u, \sigma) = \frac{u^2} {u^2 + \sigma^2}$
+			- The robust function $\rho$ behaves like squared distance for small values of the residual u but saturates for larges values of u 
+## 4C-L2 RANSAC
+- RANSAC main idea
+	- If we had a proposed model, we could probably guess which points belong to that model: inliers
+	- RANdom SAmple Consensus: 
+		- Randomly pick s points to to form a sample
+		- Instatiate the model
+		- Get consensus set $C_i$ -- the points within error bounds (distance threshold) of the model
+		- If $|C_i| > T$, terminate and return model
+		- Repeat for $N$ trials, return model with max $|C_i|$
+-Choosing the parameters
+	- Initial number of points s
+		- Typically minimum number needed to fit the model
+	- Distance threshold t
+		- Choose t so probability for inlier is high
+		- Zero-mean gaussian noise with std. dev. $\sigma$, $t^2 = 3.84 \sigma^2$
+	- Number of samples N
+		- Choose N so that with probability p, at least one random sample set is free from outliers.
+		- Need to set N based upon the outlier ratio e
+- What to do when don't know inlier ratio e?
+	- Adaptively determining the number of samples
+		- Inlier ratio e is often unknown as a priori
+		- Pick worst case, e.g. 50% (e = 0.5) and adapt if more inliers are found
+- RANSAC advantages
+	- Simple and general
+	- Applicable to many different problems, often works well in practice
+	- Robust to large number of outliers
+	- Applicable to large number of parameter than though transform
+	- Parameters are easier to choose than Hough transform
+- Not-so-good
+	- Computational time grows with the number of model parameters
+	- Not as good for getting multiple fits
+	- Really not good for approximate models
+## 5A-L1 Photometry
+- Photometry: measuring light
+- Surface appearance
+	- Image intensity = f ( normal, surface reflectance, illumination)
+	- Surface reflection depends on both the viewing and illumination directions
+- Radiometry
+	- Radiance (L): Energy carried by a ray
+		- Power per unit area perpendicular to direction of travel, per unit solid angle
+		- Units: Watss per square meter per steradian $(Wm^{-2}sr{-1})$
+	- Irradiance (E): Energy arriving at a surface
+		- Incident power in a given direction, per unit area
+		- Units: $Wm^{-2}$
+- BRDF: bidirectional reflectance distribution function
+	- Helmholtz Reciprocity $(f(\theta_i, \varphi_i; \theta_r, \varphi_r) = f(\theta_r, \varphi_r; \theta_i, \varphi_i)$
+	- Rotational symmetry (Isotropy)
+- Reflection models
+	- Image intensity = Body reflection (diffuse) + surface reflection
+	- Diffuse reflection
+		- Lambertian BRDF: appear equally bright from all directions. 
+			- BRDF is simply a constant - the *albedo* $\rho_d$
+			- Surface radiance: $L = \rho_d I cos \theta_i = \rho_d I(\overrightarrow{n} \cdot \overrightarrow{s})$
+	- Specular reflection and mirror BRDF
+		- All incident light reflected in a single direction
+		- Mirror BRDF is simply a double-delta function
+	- Specular reflection and Glossy BRDF
+		- $L = I \rho_s (\overrightarrow{m} \cdot \overrightarrow{v})^k$, m source, v view
+	- Phong reflection model
+		- The BRDF of many surfaces can be approximated by Lambertian + Specular model
+## 5B-L1 Lightness
+- Ambiguity of lighting and reflectance
+	- The Mondrian world, Assumptions
+		- Light is slowly varying
+			- This is reasonable for planar world: nearby image points come from nearby scene points with same surface normal
+		- Within an object reflectance is constant
+		- Between objects, reflectance varies suddenly.
+- Land's Retinex Theory
+	- Goal: remove slow variations from the image
+	- Many approaches, one is to take logs of $L(x,y) = R(x,y) * E(x,y)$
+		- $log(L(x,y)) = log(R(x,y)) + log(E(x,y))$
+		- Hi-pass filter (say with derivative)
+		- Threshold to remove small low-frequencies
+		- Then invert process, take integral, exponentiate
+- Human color and lightness constancy
+	- Color constancy: determine hue and saturation under different colors of lighting
+	- Lightness constancy: gray-level reflectance under differing intensity of lighting
+## 5C-L1 Shape from shading
+- Surface normal
+- Gaussian sphere and Gradient space projection
+- Shape from shading: need more information
+	- Add more constraints: shape-from-shading, single image
+	- Take more images: photometric stereo
+		- Input: several images
+			- Same object
+			- Different lightings
+			- Same pose
+## 6A-L1 Introduction to Motion
+- Motion applications
+	- Background subtraction
+	- Shot boundary detection
+	- Motion segmentation
+		- Segment the video into multiple coherently moving objects
+- Motion estimation techniques
+	- Feature-based methods
+		- Extract visual features (corners, textured areas) and track them over multiple frames
+		- Spare motion fields, but more robust tracking
+		- Suitable when image motion is large (10s of pixels)
+	- Direct, dense methods
+		- Directly recover image motion at each pixel from spatio-temporal image brightness variations
+		- Dense motion fields, but sensitive to appearance variations
+		- Suitable for video and when image motion is small
+## 6B-L1 Dense flow: Brightness constraints
+- Optimal flow is the apparent motion of objects or surfaces
+- How to estimate pixel motion from image $I(x,y,t)$ to $I(x,y,t+1)$?
+	- Solve pixel correspondence problem
+		- Given pixel in $I(x,y,t)$, look for **nearby** pixels of the **same color** in $I(x,y,t+1)$.
+	- Key assumptions
+		- Color constancy: a point in $I(x,y,t)$ looks the same in $I(x',y',t+1)$
+			- For grayscale images, this is brightness constancy
+		- Small motion: points do not move far away
+	- Brightness constancy constraint equation
+		- $I_x u + I_y v  + I_t = 0$
+- Aperture problem: you can only tell the motion locally in the direction perpendicular to the edge.
+- For each pixel, we have 2 unknowns but only one equation
+- Formulate error in optical flow constraint $e_c$
+- Add more constraints
+	- Smoothness constraint (global constraint): motion field tends to vary smoothly over the image, $e_s$
+	- Penalized for changes in u and v over the image
+	- $ e = e_s + \lambda e_c$
+## 6B-L2 Dense flow: Lucas and Kanade
+- Solving the aperture problem
+	- One method (local constraint): pretend the pixel's neighbors have the same (u,v)
+		- If we use a 5x5 window, that gives us 25 equations per pixel.
+- RGB version
+	- Note RGB alone at a pixel is not enough to disambiguate because R, G & B are correlated.
+- Errors in Lucas-Kanade
+	- The motion is large (larger than a pixel) - Taylor doesn't hold
+		- Not-linear: iterative refinement
+		- Local minima: coarse-to-fine estimation
+	- Not tangent: Iterative refinement
+		- Iterative algorithm
+			- Estimate velocity at each pixel by solving Lucas-Kanade equations
+			- Warp $I_t$ towards $I_{t+1}$ using the estimated flow field 
+				- Use image warping techniques
+			- Repeat until convergence.
+## 6B-L3 Hierachical L-K
+- Solve local minima problem
+	- Reduce the resolution
+	- Use gaussian pyramid of images, start from the very reduced level, run iterative L-K, warp and upsample to next level.
+- Sparse L-K
+	- Basically hierarchical L-K applied to good feature locations
+## 6B-L4 Motion models
+- General motion model
+	- $\begin{pmatrix}
+		u(x,y) \\ v(x,y)
+		\end{pmatrix} = \frac{1} {Z(x,y)} A(x,y) T + B(x,y) \Omega$
+	- where $T$ is the translation vector, $\Omega$ is the rotation
+	- $A(x,y) = \begin{pmatrix}
+	-f & 0 & x \\
+	0 & -f & y
+	\end{pmatrix}
+	\quad 
+	B(x,y) = \begin{pmatrix}
+	(xy) / f & -(f+x^2) / f & y \\
+	(f + y^2) / f & - (xy) / f & -x
+	\end{pmatrix} 	$
+- Affine motion: if Z is big, motion in Z can be neglected which simplifies homograhpy motion to affine motion. 
+- Layered motion
+	- Break image sequence into "layers" each of which has coherent motion
+	- Each layer is defined by an alpha mask and an affine motion
+- Motion segmentation
+## 7A-L1 Introduction to tracking
+- Tracking challenges
+	- Many places it's hard to compute optical flow
+	- There can be large displacements since could be moving rapidly
+		- Probably need to take dynamics into account
+	- Errors would compound - or drift
+	- Occlusions, disocclusions
+- Shi Tomasi feature tracker
+	- Only compute motion where you should
+	- Find good features using eigenvalues of second-moment matrix
+	- 1. Fom frame to frame, track with Lucas-Kanade and a pure translation model
+	- 2. Check consistency of tracks by affine registration to the first (or earlier) observed instance of the feature
+- Tracking with dynamics
+	- Given a model of expected motion, predict where objects will occur in next frame even before seeing the image
+		- Restrict search for the object
+		- Improved estimates since measurement noices is reduced by trajectory smoothness
+	- Assumption - continuous (modeled) motion patterns
+		- Objects do not disappear and reappear in different places in the scene
+		- Camera is not moving instantaneously to new viewpoint
+		- Gradual change in pose between camera and scene
+## 7B-L1 Tracking as inference
+- Hidden state (X): true parameters we care about
+- Measurement (Y): noisy observation of underlying state
+- At each time stp t, state changes (from $X_{t−1}$ to $X_t$) and we get a new observation $Y_t$
+- Out goal: recover (estimate) most likely (distribution of) state $X_t$ given
+	- All observations so far
+	- Knowledge about dynamics of state transitions
+- **Steps of tracking**
+	- Prediction: what is the next state of the object given past measurements
+	- Correction: Compute an updated estimate of the state from prediction and measurements
+	- Tracking: The process of propagating this posterior distribution of state given measurements across time.
+- Simplifying assumptions
+	- Only the immediate past matters
+		- $P(X_t | X_0, ..., X_{t-1}) = P(X_t | X_{t-1})$ Dynamics model
+	- Measurements depend only on the current state
+		- $P(Y_t | X_0, Y_0, ..., X_{t-1}, Y_{t-1}, X_t) = P(Y_t | X_t)$ Observation model
+## 7B-L2 The Kalman Filter
+- Linear models
+	- Linear dynamics model
+		- State undergoes linear transformation plus Gaussian noise
+			- $x_t \sim N(D_t x_{t-1}, \sum_{d_t})$
+	- Linear measurement model
+		- observation model: measurement is linearly transformed state plus Gaussian noise
+			- $y_t \sim N(M_t x_t, \sum_{m_t})$
+- Measurement will only reduce uncertainty.
+- 1D KF intuition: new mean is the weighted average of prediction and measurement based on variances.
+- KF is a method for tracking linear dynamical models in Gaussian noise contexts (dynamics and measurements).
+	- Predicted/corrected state densities are Gaussian
+		- You only need to maintain the mean and covariance
+		- The calculations are easy. (all integrals can be done in close form)
+- KF pros
+	- Simple updates, compact and efficient
+- KF Cons
+	- Unimodal distribution, only single hypothesis
+	- Restricted class of motions defined by linear model
+		- Extensions called "Extended Kalman Filter"
+## 7C-L1 Bayes filters
+- What should we do for non-gaussian distributions? propagation of general densities
+- Particle filters
+	- Density is represented by both where the particles are and their weight.
+- Bayes filters: framework
+	- Given
+		- Prior probability of the system state $p(x)$
+		- Action (dynamical system) model: $p(x_t | u_{t-1}, x_{t-1})$
+		- Sensor model (likelihood) $p(z|x)$
+		- Stream of observations $z$ and action data $u$: $data_i = {u_1, z_2, ..., u_{t-1}, z_t}$
+	- Wanted
+		- Estimate of the state $X$ at time $t$
+		- The posterior of the state is also called *belief*:
+			- $Bel(x_t) = P(x_t | u_1, z_2, ..., u_{t-1}, z_t)$
+- Bayes rule
+	- $p(x|z) = \frac{p(z|x) p(x)} {p(z)} = \eta p(z|x) p(x) \propto p(z|x) p(x)$
+- Bayes filter
+	- $Bel(x_t) = \eta P(z_t | x_t) \int P(x_t | u_{t-1}, x_{t-1}) Bel(x_{t-1}) dx_{t-1}$
+	- z = observation, u = action, x = state
+## 7C-L2 Particle filters
+- Properties of the real world
+	- Position of robot is not discrete (a real number)
+	- Sensor is noisy, so some readings may be false.
+	- As a result, the predicted position given sensor readings is a probability distribution over space.
+## 7C-L3 Particle filters for localization
+- Localization
+	- Assume a robot knows a 3D map of its world
+	- It has noisy depth sensors but whose sensing uncertainty is known.
+	- It moves from frame to frame.
+- Particle filter: practical considerations
+	- Resampling
+		- Roulette wheel, binary search n logn
+		- Stachastic universal sampling
+			- systematic resampling
+			- Linear time complexity
+			- Easy to implement, low variance
+	- Resample only when necessary
+	- For highly peaked observations
+		- add noise to observation and prediction models
+		- better proposal distributions - e.g. perform kalman filter step to determine proposal
+		- Overestimating noise often reduce the number of required samples - always better to slightly over estimate than under.
+	- Recover from failure - resample
+		- Selectively add samples from observations
+		- Uniformly add some samples
+## 7C-L4 Particle filters for real
+## 7D-L1 Tracking considerations
+- Mean-shift
+	- easiest to introduce when doing segmentation
+	- The ideas is to find the modes of a distribution, or a probability density
+	- The assumption is you have a set of instances drawn from a PDF and you want to find the mode.
+- Mean-shift object tracking
+	- Start from the position of the model in the current frame
+	- Search neighborhood in next frame
+	- Find best by maximizing a similarity function
+	- Repeat the same process in the next pair of frames
+- Representation, feature space, quantized color space, histogram
+- Gradient
+	- Instead of uniform kernel, we could use a differentiable, isotropic, monotonically decreasing kernel, for example: Gaussian.
+	- You can move to the mode without blind search, but use gradient.
+- We could use the similarity function as a sensor model for particle filtering.
+- Tracking issues
+	- Initialization
+		- manual
+		- background subtraction
+		- detection
+	- Obtaining observation and dynamics model
+		- Dynamics model: learn from real data (pretty difficult), learn from "clean data" (easier), or specify using domain knowledge.
+		- Generative observation model - some form of ground truth required
+	- Prediction vs. Correction
+		- If the dynamics model is too strong, will end up ignoring the data.
+		- If the observation model is too strong, tracking is reduced to repeated detection.
+	- Data association
+		- What if we don't know which measurements to associate with which tracks?
+		- So far, we've assumed the entire measurement to be relevant to determining the state
+		- In reality, multiple objects or clutter (uninformative measurements)
+		- Solution:
+			- Simple: just pay attention to the closest 
+			- More sophisticated strategy: keep track of multiple state/observation hypothesis
+				- Each particle is a hypothesis about current state.
+	- Drift
+		- Errors caused by dynamical model, observation model, and data association tend to accumulate over time.
+		- All trackers have some sort of model update.
+## 8A-L1 Introduction to recognition
+- Object categorization
+	- Given a (small) number of training images of a category, recognize a-priori unknown instances of that category and assign the correct category label.
+-  Recognition challenges
+	- Robustness
+		- Illumination, object pose, clutter, occlusions, intra-class appearance, viewpoint
+		- Realistric scenes are crowed, cluttered, have overlapping objects.
+	- Importance of context
+	- Complexity
+		- About half of the cerebral cortex in primates is devoted to processing visual information.
+## 8B-L1 Classifications: generative models
+- Supervised classification
+	- Given a collection of labeled examples, come up with a function that will predict the labels of new examples
+	- Two general strategies
+		- Use the training data to build representative probability model; separately model class-conditional densities and priors (generative)
+		- Directly construct a good decision boundary, model the posterior (discriminative)
+- Risk of a classifier strategy $S$ is expected loss.
+- At best decision boundary, either choice of label yields same expected loss.
+- For a given measurement $x$ and set of classes $c_i$ choose $c^*$ by:
+	- $c* = arg\ \underset{c}{max}\ p(c|x) = arg\ \underset{c}{max}\ p(c) p(x|c)$
+- Summary of generative models
+	- Firm probabilistic grounding
+	- Allows inclusion of prior knowledge 
+	- Parameteric modeling of likelihood permits using small number of examples
+	- New classes do not pertub previous models
+	- Others
+		- Can take advantage of unlabelled data
+		- Can be used to generate samples
+	- Bads
+		- Where did you get those priors?
+		- Why are modeling those obviously non-C points?
+		- The example hard cases aren't special
+		- If you have lots of data, doesn't help.
