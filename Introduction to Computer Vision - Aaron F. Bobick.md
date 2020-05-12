@@ -794,3 +794,208 @@
 		- Why are modeling those obviously non-C points?
 		- The example hard cases aren't special
 		- If you have lots of data, doesn't help.
+## 8B-L2 Principle component analysis
+- Principal components are ll about the directions in a feature space along which points have the greatest variance.
+-  Algebraic interpretation
+	- Minimizing sum of squares of distances to the line is the same as maximizing the sum of squares of the projections on that line.
+	- max $(x^T B^T B x)$, subject to $x^T x = 1$.
+	- i.e. maximize $E = x^T M x$, subject to $x^T x  = 1$
+		- $E' = x^T M x + \lambda (1 - x^T x )$
+		- $\frac{\partial E'} {\partial x} = 2 Mx + 2 \lambda x$
+		- $\frac{\partial E'} {\partial x} = 0 \rightarrow Mx = \lambda x$ (x is an eigenvector of $B^TB$)
+	- $B^TB = \sum xx^T$ if about origin
+	- $B^TB = \sum (x - \bar{x}) (x - \bar{x})^T$ otherwise - outer product
+	- So the principal components are the orthogonal directions of the covariance matrix of a set points.
+- PCA may not be a good choice if the axis of the most variants for source distributions are not perpendicular. ICA (independent component analslysis) doesn't require the components or basis vectors to be orthgonal.
+- We want to construct a low-dimensional linear subspace that best explains the variation in the set of face images.
+- PCA
+	- Given $M$ data points $x_1, ..., x_M$ in $R^d$ where $d$ is big
+	- We want some directions in $R^d$ that capture most of the variation of the $x_i$. THe coefficients would be $u(x_i) = u^T (x_i - \mu)$ ($\mu$ mean of data points) 
+	- Direction that maximizes the variance of the projected data
+		- $var(u) = \frac{1}{M} \sum^M_{i=1} u^T (x_i - \mu)(u^T (x_i - \mu))^T\\  \quad=u^T\left[ \frac{1}{M} \sum^M_{i=1} (x_i - \mu) (x_i - \mu)^T\right] u \\ \quad = u^T \sum u$
+	- The direction that captures the maximum covariance of the data is the eigenvector corresponding to the largest eigenvalue of the data covariance matrix $\sum$
+- The dimensionality trick
+	- $C = AA^T$ huge $dxd$ matrix and $d >> n$, 
+	- To get eigenvector of $C$, we can compute eigenvector of $A^TA$ which is much smaller $nxn$, then suppose $v_i$ is an eigenvector of $A^TA$
+		- $A^TAv_i = \lambda v_i$
+		- Premultiply by $A$
+			- $AA^TAv_i = \lambda Av_i$
+		- So $Av_i$ are the eigenvectors of $C$!
+- How many eigenvectors are there?
+	- If $M > d$, that would be d
+	- but for $M << d$, it is $M-1$ because we subtract the mean which removes one DOF
+- Eigenfaces
+	- Assume that most of face images lie on a low-dimensional subspace by the first $k (k <<< d)$ directions of maximum variance
+	- Use PCA to determine the vetors or "eigenfaces" $u_1, u_2, ..., u_k$ that span that subspace
+	- Represent all face images in the dataset as linear combinations of eigenfaces. Find the coefficients by dot product.
+- Recognition with eigenfaces
+	- Given novel image $x$:
+		- Project onto subspace
+			- $[w_1, ...,w_k] = [u_1^T(x - \mu), ..., u_k^T (x - \mu)]$
+		- Optinal: check reconstruction error $x - \hat{x}$ to determine whether image is really a face.
+		- Classify as closest training face in k-dimensional subspace
+		- This is why it's a generative model.
+- PCA limitations
+	- Global appearance method: not robust to misalignment, background variation
+	- The direction of maximum variance is not always good for classification
+- More examples: eigen-gaits, eigen-bodyshape, non-linear kernel PCA
+## 8B-L3 Appearance-based tracking
+- Appearance-based tracking: Learn something about the possible target, by capturing a low-dimensional space to enable the ability of reconstruction, then you can track the target around by finding the place that you can reconstruct the best.
+- Eigentracking [Black and Jephson 1996]
+	- Key insight: separate geometry from appearance - use deformable model
+	- But, need to solve nonlinear optimization problem
+	- And fixed basis set
+- Incremental visual learning
+	- Adaptive visual tracker
+		- particle filter: draw samples from distributions of deformation
+	- Subspace-based tracking
+		- Learn to track the "thing" like the face in eigenfaces
+		- Use it to determine the most likely sample
+	- Incremental subspace update
+		- Does not need to build the model prior to tracking
+		- Handles variations in lighting, pose (and expression)
+- State model $L_t$
+	- Similarity transform: position $(x_t, y_t)$, rotation $\theta$, scaling $s_t$, 4 parameters
+	- Or affine transform with 6 parameters
+- Simple  dynamics model: $p(L_t | L_{t-1}$
+	- Each parameter is independently Gaussian distributed
+- Observation model: $p(F_t|L_t)$
+	- Use probabilistic PCA to model our image observation process
+	- Given a location $L_t$, assume the observed frame was generated from the eigenbasis
+- Incremental subspace update
+	- Given initial eigenbasis $B_{t-1}$ and new observation $w_{t-1}$, compute a new eigenbasis $B_t$.
+	- Why? to account for appearance change due to space, illumination, shape variation
+	- Learn an appearance representation while tracking
+	- Essentailly, develop an update algorithm with respect to running mean, allowing for decay
+- Occlusion handling
+	- An iterative method to compute a weight mask
+		- Estimate the probability a pixel being occluded
+## 8C-L1 Disriminative classifiers
+- Model the decision boundaries  probabilistically.
+- Asssumptions in discriminative classification
+	- There are a fixed number of known classes
+	- Ample number of training examples of each class
+	- Equal cost of making mistakes - what matters is getting the label right
+	- Need to construct a representation of the instance but we don't know a prior what features are diagnostic of the class label.
+- Train
+	- Build an object model - a representation describe training instances
+	- learn/train a classifier
+- Test
+	- Generate candidates in new image
+	- Score the candidates
+- Window-based models
+	- Simple holistic descriptions of image content
+		- grayscale / color histogram
+		- vector of pixel intensities
+	- Pixel-based representations sensitive to small shifts
+	- Color or grayscale-based description can be sensitive to illumination and intra-class appearance variation.
+	- Consider edges, contours, and (oriented) intensity gradients
+	- Summarize local distribution of gradients with histogram
+		- Locally orderless: offers invariance to small shifts and rotations
+		- Contrast-normalization: try to correct for variable illumination
+- Distriminative classifier construction
+	- Nearest neighbor
+	- Neural networks
+	- SVMs
+	- Boosting
+	- Random Forests
+- Nearest neighbor
+	- Choose label of nearest training data point
+	- KNN
+		- for a new point, find the k closest points from the training data
+		- vote for the class
+## 8C-L2 Boosting and face detection
+- Boosting
+	- Iterative learning method
+	- Initially weight each training example equally
+	- In each boosting round
+		- Find the weak learner that achieves the lowest weighted training error
+		- Raise weights of training examples misclassified by current weak learner
+	- General: compute final classified as linear combination of all weak learners (weight of each learner is directly proportional to its accuracy)
+	- Extract formulas for re-weighting and combining weak learners depend on the particular boosting scheme (e.g. AdaBoost)
+- Integral image: the value at $(x,y)$ is sum of pixels above and to the left of $(x,y)$
+	- Computing sum within a rectangle, sum = A - B - C + D. D is the top left corner, A is right bottom corner.
+- Viola-Jones face detector
+	- Represent brightness patterns with efficiently computable "rectangular" features within window of interest
+	- Choose distriminative features to be weak classifiers/learners.
+	- Use boosted combination of them as final classifier
+	- Form a cascade of such classifiers, rejecting clear negatives quickly.
+- Cascade
+	- Form a cascade with really low false negative rates early
+	- At each stage use the false positives from last stage as "difficult negatives"
+- Summary of viola-jones face detector
+	- Key ideas:
+		- Rectangular features and integral image
+		- AdaBoost for feature selection
+		- Cascade
+	- Training is slow but detection is very fast.
+- Boosting (general) advantages
+	- Integrates classification with feature selection
+	- Flexibility in the choice of weak learners, boosting scheme
+	- Complexity of training is linear in the number of training examples
+	- Testing is fast
+	- Easy to implement
+- Disadvantages
+	- Needs many training examples
+	- Often found not work as well as an alternative distriminative classifier, SVM.
+		- Especailly for many-class problems.
+## 8C-L3 Support Vector Machine
+- Linear 2D SVM
+	- Discriminative classifiers based on optimal separating line (2D case)
+	- Maximize the margin between positive and negative training examples
+	- $x_i$ positive $(y_i = 1): x_i w + b >= 1$
+	- $x_i$ negative $(y_i = -1): x_i w + b <= -1$
+	- For support vectors: $x_i w + b = \pm 1$
+	- Distance between point and line $\frac{|x_i w + b|} {||w||}$
+		- for support vectors: $\frac{|x_i w + b|} {||w||} = \frac{\pm 1} {||w||}$
+		- margin $M = \frac{2} {||w||}$
+	- Quadratic optimization problem
+		- Minimize $\frac{1}{2} w^T w$
+		- subject to $y_ (x_i w + b) >= 1$
+		- Solution: $w  = \sum_i \alpha_i y_i x_i$
+			- $\alpha$ learned weights, $x_i$ support vector
+- Non linear SVMs
+	- original input space can be mapped to some higher-dimensional space
+	- The "kernel" trick
+		- We saw linear classifier relies on dot product between vectors
+		- Define $K(x_i, x_j) = x_i \cdot x_j = x_i^T x_j$
+		- Map $\Phi : x \rightarrow \varphi(x)$
+		- the dot product becomes: $K(x_i, x_j) => \varphi(x_i)^T \varphi(x_j)$
+		- A kernel function is a "similarity" function that corresponds to an inner product in some expanded feature space
+		- $\sum_i \alpha_i y_i (x_i^T x) + b \rightarrow \sum_i \alpha_i y_i K(x_i^T, x) + b$, $x$ is the new point, $x_i$ is support vector 
+- Example of kernels
+	- Gaussian RBF: $K(x_i,x_j) = exp\left( - \frac{||x_i-x_j||^2}{2\sigma^2}\right)$
+		- Number of dimensions: infinite
+		- $exp\left( - \frac{1}{2} ||x-x'||^2_2\right) = \sum^\infty_{j=0} \frac{(x^Tx')^j}{j!} exp \left( -\frac{1}{2} ||x||^2_2\right) exp \left( -\frac{1}{2} ||x'||^2_2\right)$
+	- Histogram intersection
+		- $K(x_i, x_j) = \sum_k min(x_i(k), x_j(k))$
+- SVMs for recognition: 
+	- Training
+		- Define your representation
+		- Select a kernel function
+		- Compute pairwise kernel values between labeled examples
+		- Use this "kernel matrix" to solve for SVM support vectors & weights
+	- Prediction
+		- Compute kernel values between new input and support vectors
+		- Apply weights
+		- Check sign of output
+- Multi-class SVMs
+	- Combine a number of binary classifiers
+		- one vs. all
+			- Traiing: learn an SVM for each class vs. the rest
+			- Testing: Apply each SVM to test example and assign it to the class of the SVM that returns the highest decision value
+		- one vs. one
+			- training: learn an SVM for each pair of classes
+			- testing: each learned SVM "votes" for a class to be assigned to the test example
+- SVMs pros
+	- many publicly available SVM packages
+	- kernel-based framework is very powerful, flexible
+	- Often a sparse set of support vectors - compact when testing
+	- Works very well in practice, even with very small training sample sizes
+- SVMs cons
+	- No "direct" multi-class SVM, must combine two-class SVMs
+	- Can be tricky to select best kernel function for a problem
+	- Nobody writes their own SVMs
+	- Computation, memory
+		- during training time, must compute matrix of kernel values for every pair of examples
+		- learning can take a very long time for large-scale problem
