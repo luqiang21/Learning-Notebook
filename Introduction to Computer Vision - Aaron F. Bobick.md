@@ -999,3 +999,83 @@
 	- Computation, memory
 		- during training time, must compute matrix of kernel values for every pair of examples
 		- learning can take a very long time for large-scale problem
+## 8C-L4 Bag of visual words
+- Indexing local features
+	- Each patch/region has a descriptor,which is a point in some high-dimensional feature space (e.g. SIFT)
+	- When we see close points in feature space, we have simliar descriptors, which indicates similar local content.
+	- Easily can have millions of features to search
+	- For text documents, an efficient way to find all pages on which a word occurs is to use an index
+	- We want to find all images in which a *feature* occurs.
+	- To use this idea, we'll need to map our features to "visual words"
+- Bags of visual words
+	- Summarize entire image based on its distribution (histogram) of word occurences
+	- Analogous to bag of words representation commonly used for documents
+- Comparing bags of words
+	- Rank by normalized scalar product between their (possibly weighted) occurrence counts -- nearest neighbor search for similar images.
+## 8D-L1 Introduction to video analysis
+- A video is a sequence of frames captured over time
+	- Now our image data is a function space $(x,y)$ and time $(t)$
+- Background subtraction
+	- Needs static camera - still hard
+	- Simple approach
+		- Estimate background for time $t$
+		- Subtract estimated background from current input frame
+		- Apply a threshold to the absolute difference to get the foreground mask
+	- Frame differencing
+		- Background is estimated to be the previous frame
+		- Has problems for pixels which object that may have no change over time.
+- Mean filtering
+	- Background is the mean of previous $n$ frames
+	- It will average objects as well into the background
+- Median filtering
+	- Assuming that the background is more likely to appear in a scene, we can use the median of previous $n$ frames as the background model
+	- Advantages
+		- Extremely easy to implement and use
+		- All pretty fast
+		- Corresponding background need not to be constant, they change over time
+	- Disadvantages
+		- Accuracy of frame differencing depends on object speed and frame rate
+		- Median background model - relatively high memory requirements
+		- Setting global threshold is hard
+- Background subtraction with depth, kinect
+- Epipolar plane images
+	- EPI gait
+		- stack of images give us volume of data
+		- can be used to find out background of moving objects by checking the slopes of moving strips
+## 8D-L2 Activity recognition
+- Terminology
+	- Event: a single instant in time detection
+	- Actions or Movements: atomic motion patterns
+		- Often gesture-like
+		- Single clear-cut trajectory
+		- Single nameable behavior (e.g., sit, wave arms)
+	- Activity: Series or composition of actions
+		- E.g. interactions between people
+- Model based action recognition
+	- Use human body tracking and pose estimation techniques, relate to action descriptions
+	- Major challenge: training data from different context than testing
+- Model based activity recognition
+	- Given some lower level detection of actions (or events) recognize the activity by comparing to some structural representation of the activity
+	- Needs to handle uncertainty
+	- Major challenge: accurate tracks in spite of occlusion, ambiguity, low resolution
+- Activity as motion, space-time appearance patterns
+- Activity-recognition from a static image
+- Motion History Images
+	- MHIs are a different function of temporal volume
+		- Pixel operator is replacement decay
+		- if moving:
+			- $I_\tau(x,y,t) = \tau$
+		- otherwise:
+			- $I_\tau(x,y,t) = max(I_\tau(x,y,t-1) - 1, 0)$
+	- MHI shows which things moved and also how things moved.
+- MEI motion energy images
+	- binary image, roughly locates the area of motions of a given action from a given view
+- Image moments
+	- Moments, summarize a shape given image $I(x,y)$
+		- $M_{ij} = \sum_x \sum_y x^i y^j I(x,y)$
+	- Central Moments are translation invariant
+		- $$\mu_{pq} = \sum_x \sum_y (x-\bar{x})^p (y-\bar{y})^q I(x,y)$$
+		- $\bar{x} = \frac{M_{10}}{M_{00}}\quad \bar{y} = \frac{M_{01}} {M_{00}}$
+- Hu moments
+	- Translation and rotation and scale invariant
+	- Compute MEI and MHI based on 7 Hu moments to get feature vector
