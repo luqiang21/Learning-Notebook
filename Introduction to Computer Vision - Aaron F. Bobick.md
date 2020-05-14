@@ -1079,3 +1079,258 @@
 - Hu moments
 	- Translation and rotation and scale invariant
 	- Compute MEI and MHI based on 7 Hu moments to get feature vector
+## 8D-L3 Hidden Markov Models
+- Possible problems
+	- Time series classification
+	- Time series prediction/generation
+	- Outlier detection
+	- Time series segmentation
+- Markov model
+	- Probability of moving to a given state depends only on the current state: 1st order Markovian
+	- Ingredients of a Markov Model
+		- States: $\{S_1, S_2, \cdots, S_N\}$
+		- State transition probabilities: $a_{ji} = P(q_{t+1} = S_i | q_t = S_j)$
+		- Initial state distribution: $\pi_i = P[q_1 = S_i]$
+- Hidden Markov Models
+	- You can't observe the state, but you can observe observables (evidence)
+	- Emission probabilities
+		- $b_j(k) = P(o_t = k | q_t = S_i)$
+		- probability of an observation given you are in a state
+	- Given some sequence of observations, what "model" generated those?
+- 3 computational problems of HMMs
+	- Evaluation $P(O|\lambda)$: given the model $\lambda = (A,B,\pi)$ what is the probability of occurrence of a particular observation sequence $O = \{o_1, \cdots, o_T\}$
+		- Classification/recognition problem: I have a trained model for each of a set of classes, which one would most likely generate what I saw.
+	- Decoding: optimal state sequence to produce an observation sequence $O = \{o_1, \cdots, o_T\}$
+		- Useful in recognition problems - helps give meaning to states
+	- Learning: Determine model $\lambda$, given a training set of observations
+		- Find $\lambda$, such that P(O|\lambda) is maximal
+- HMMs general
+	- HMMs: generative probabilistic models of time series (with hidden state)
+	- Forward-backward: algorithm for computing probabilities over hidden states
+		- Given the forward-backward algorithms you can train the models
+	- Best known methods in speech, computer vision, robotics, thought for really big data CRFs winning.
+- Good points about HMMs
+	- A learning paradigm that acquires spatial and temporal models and does some amount of feature selection 
+	- Recognition is fast, training is not so fast but not too bad
+- Not so good points
+	- Not great for on the fly labeling - e.g. segmentation of input streams. Requires lots of data to train for that - much like language
+	- Works well when problem is easy, less clear other times.
+## 9A-L1 Color spaces
+- Retina, Color matching function based on RGB
+	- Most spectral color can represented as a positive combination of these primary colors, but some spectral cannot, need to add some red.
+- Color is a Psychological phenomenon
+- Luminance vs color
+	- Human is more sensitive to brightness change than to color change.
+- HSL and HSV
+	- Hue Saturation Lightness
+	- Hue Saturation Value
+	- Hue corresponds to color
+		- Treat hue as an angle, reds from booths ends of the spectrum now in proximity
+		- Better reflects the role of saturation (radius or distance from center)
+- Color gamuts: subspace of color space for monitor/printer/etc...
+- YUV color space make easier to separate colors.
+	- Easier clustering of pixels
+	- Efficient encoding by choma subsampling
+		- Recall that human vision is more sensitive to intensity changes
+		- Y channel can now use more bits
+## 9A-L2 Segmentation
+- Segmentation
+	- Segementation of coherent regions
+	- Figure ground segmentation
+		- Separate foreground object (figure) from the background (ground)
+	- Grouping of similar neighbors: superpixels
+- Clustering
+	- Best cluster centers are those that minimize SSD between all points and their nearest cluster center $c_i$
+	- K-means clustering, need to set k before clustering
+	- Clustering for an image can be thought of quantization of the feature space
+	- Simple clustering for image
+		- Intensity-based
+		- Color-based
+- Kmeans cons
+	- Memory-intensive, need to pick k, sensitive to initialization, sensitive to outliers, only finds "spherical" clusters 
+## 9A-L3 Mean shift segmentation
+- The mean shift algorithm seeks modes or local maxima of density in the feature space.
+- Mean shift clustering
+	- Cluster: all data points in the attraction basin of a mode
+	- Attraction basin: the region for which all trajectories lead to the same mode
+	- Steps
+		- Find features (color, gradients, texture, Luv space, etc.)
+		- Initialize windows at individual feature points (sampled pixels) 
+		- Perform mean shift for each window (pixel) until convergence
+		- Merge windows (pixels) that end up near the same "peak" or mode
+- Pros
+	- Automatically find basin of attraction
+	- One parameter choice (window size)
+	- Does not assume (image) shape on clusters
+	- Generic technique
+	- Find multiple modes
+- Cons
+	- Selection of window size
+	- Does not scale well with dimension of feature space
+- Color, brightness, position alone are not enough to distinguish all regions.
+	- Grouping pixels based on texture similarity.
+	- Feature space: filter bank responses.
+- Texture features
+	- Find "textons" by clustering vectors of filter bank outputs
+	- Describe texture in a window based on its texton histogram
+## 9A-L4 Segmentation by graph partitioning
+- Images as graphs
+	- Fully-connnected graph
+		- 1 node (vertex) for every pixel
+		- A link between every pair of pixels, $<p, q>$
+		- Affinity weight $w_{pq}$ for each link (edge)
+			- $w_{pq}$ measures similarity: Inversely proportional to difference (in color and position...)
+- Segmentation by graph partitioning
+	- Break graph into segments
+		- Delete links that cross between segments
+		- Easest to break links with low affinity
+- Graph cut
+	- Set of edges whose removal makes a graph disconnected
+	- Cost of a cut
+		- Sum of weights of cut edges
+- A graph cut gives us a segmentation
+- Find minimum cut
+	- problems
+		- weight of cut proportional to number of edge in the cut
+		- tends to produce small, isolated components
+- Normalized cut
+	- Fix bias of min cut by normalizing for size of segments
+		- $Ncut(A,B) = \frac{cut(A,B)}{assoc(A,V)} + \frac{cut(A,B)}{assoc(B,V)}$
+		- $assoc(A,V)$ = sum of weights of all edges that touch A
+- Pros
+	- Generic framework
+		- Flexible to choice of function that computes weights ("affinities") between nodes
+	- Does not require model of the data distribution
+- Cons
+	- Time complexity can be high
+		- Dense, highly connected graphs
+			- many affinity computations
+		- Solving eigenvalue problem
+	- Preference for balanced partitions
+## 9B-L1 Binary morphology
+- Useful operations
+	- Thresholding a gray-scale image
+	- Determining good thresholds
+	- Connected components analysis
+	- Binary mathematical morphology
+	- All sorts of feature extractors, statistics (area, centroid, circularity, ..)
+- Thresholding
+	- Automatic thresholding: Otsu's method
+		- Assumption: the histogram is bimodal
+		- Method: find the threshold $t$ that minimizes the weighted sum of within-group variances for the two groups that result from separating the gray tones at value $t$.
+- Connected components methods
+	- Recursive tracking (almost never used)
+	- Parrallel growing (needs parallel hardware
+	- Row-by-row (most common)
+		- Classical algorithm
+		- Efficient Run-length algorithm (developed for speed in real industrial applications)
+		```
+		CC = 0
+		Scan across rows:
+			If 1 and connected:
+				Propogate lowest label behind or above(4 or 8 connected)
+				Remember conflicts
+			If 1 and not connected:
+				CC++ and label CC
+			If 0:
+				Label 0
+		Relabel based on table (conflicts)
+		```
+- Mathematical morphology
+	- two basic operations
+		- Dilation
+			- expands the connected sets of 1s of a binary image, can be used for growing features, filling holes and gaps
+		- Erosion
+			- shrinks the connected sets of 1s of a binary image, can be used for shrinking features, removing bridges, branches, protrusions
+- Structuring element
+	- A shape mask used in basic morphology operations
+		- Any shape, size that is digitally representable
+		- With a defined origin
+	- Given binary B and structuring element S, we can perform dilation using **OR** and erosion using **AND**.
+- The two most useful binary morphology operations are opening and closing
+	- Opening is the compound operation of erosion followed by dilation (with the same structuring element)
+		- Can show that the opening of A by B is the union of all translations of B that fit entirely within A
+		- Opening is idempotent: repeated operations has no further effects.
+		- Intuitively, the opening is the area we can paint when the brush has a footprint B and we are not allowed to paint outside A.
+	- Closing is the compound operation of dilation followed by erosion (with the same structuring element)
+		- Can show that the closing of A by B is the complement of union of all translations of B that do not overlap A
+		- Closing is idempotent: repeated operations has no further effects.
+		- Intuitively, the closing the area we can not paint when the brush has a footprint B and we are not allowed to paint inside A.
+- Boundary extraction
+	- Let $A\oplus B$ denote the dilation of A by B and let $A\ominus B$ denote the erosion of A by B.
+	- The boundary of A can be computed as 
+		- $$A - (A\ominus B)$$
+		- where B is a 3x3 square structuring element
+	- We subtract from A an erosion of it to obtain its boundary
+## 9C-L1 3D perception
+- Sensing
+	- Passive 3D sensing
+		- Stereo camera to get depth
+		- Recover depth from focal length
+	- Active 3D Sensing
+		- Photometric stereo, control light
+		- Time of flight: LIDAR (Laser Range finder), SONAR (Sound transceiver)
+		- Structured light: like stereo, but replace one camera with a projector
+		- Infrared structured light: RGB-D camera, MS kinect
+	- Projected IR vs Natural Light Stereo
+		- Projected IR
+			- Works in low light conditions
+			- Does not rely on having textured objects
+			- Not confused by repeated scene textures
+			- Can tailor algorithm to produced patterns
+		- Natural Light Stereo
+			- Work outside, anywhere with sufficient light
+			- Resolution limited only by sensors, not projector
+		- Difficulties with both
+			- Very dark surfaces may not reflect enough light
+			- Specular reflection in mirrors or metal causes trouble
+- Depth image vs Point cloud
+	- Depth image
+		- Advantages
+			- Dense representation
+			- Gives intuition about occlusion and free space
+			- Depth discontinuities are just edges on the image
+		- Disadvantages
+			- Viewpoint dependent, can't merge
+			- Doesn't capture physical geometry
+			- Need actual 3D locations of cameras
+	- Point clouds: take every depth pixel and put it out in the world
+		- Advantages
+			- Viewpoint independent
+			- Captures surface geometry
+			- Points represent physical locations
+		- Disadvantages
+			- Sparse representation
+			- Lost information about free space and unknown space
+			- Variable density based on distance from sensor
+		- Point clouds are sampled from object surfaces, the concept of volume is inferred, not perceived.
+		- Surfaces
+			- Tangent plane - defined by normal
+			- First-order approximation
+		- We can use surface normals of point clouds to find planes
+## 10A-L1 The retina
+- Visual field
+	- monocular visual field, each eye $160^\circ$ (horizontal)
+	- binocular visual filed,  $120^\circ$ (horizontal)
+	- Total visual field:  $200^\circ $ (horizontal) x $135^\circ$ (vertical)
+- Light detection: rods and cones
+	- Rods	
+		- 120 million rods in the retina
+		- 1000x more light sensitive than cones
+		- Discriminate between brightness levels, in low illumination
+		- Short-wavelength sensitive
+	- Cones
+		- 6~7 millions cones in the retina
+		- Responsible for high-resolution vision
+		- Discriminate colords
+		- Three types of color sensors (64% red, 32% green, 2% blue)
+		- Sensitive to any combination of the three
+- Image capture
+	- Huge dynamic range
+		- overall:$10^{-6} - 10{+8} cd/m^2$ (candelas: unit of energy)
+		- static: at least 100:1 probably more
+		- a given scene in the real world: 100,000:1
+	- Everyone knows about the pupil, but it's actually the retina's ganglion cells that make this works.
+## 10B-L1 Vision in the brain
+- V1
+- V2 and IT
