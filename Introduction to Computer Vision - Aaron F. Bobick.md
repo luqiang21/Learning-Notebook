@@ -3,7 +3,23 @@
 ## Convolution vs Correlation
 - Correlation moves filter straight, convolution flips 180 degree.
 - They are the same when the filter is symmetric
-## Filters
+## 2A-L2 Filtering
+- Moving average
+- Weighted Moving average
+- Correlation filtering
+## 2A-L3 Linearity and convolution
+- Properties of convolution
+	- Linear & shift invariant
+	- Commutative: $f*g = g*f$
+	- Associative: $(f*g) * h = f * (g*h)$
+	- Identity: Unit pulse: $e = [..., 0,0,1,0,0,...]. f*e = f$
+	- Differentiation: $\frac{\partial{}} {\partial{x}}(f*g) = \frac{\partial{f}} {\partial{x}}*g$
+- Convolution separability
+	- If $C * R = H$, C is column vector, R is row vector
+	- $G = H * F = (C * R) * F = C * (R * F)$
+	- Computation drops from N*N*W*W to 2 * N * W*W. N is the dim is F, W is the width of H.
+- Sharpening filter
+	- Accentuates differences with local average
 - Median filter
 	- Remove salt and pepper noise
 	- Preserve edges while mean filter doesn't
